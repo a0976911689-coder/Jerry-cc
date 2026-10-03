@@ -5,7 +5,7 @@
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.6;
-  font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif; font-size: 17px; }
+  font-family: "Noto Sans TC", -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 17px; }
 .wrap { max-width: 720px; margin: 0 auto; padding: 16px 16px 140px; }
 header.hero { text-align: center; padding: 20px 0 8px; }
 header.hero h1 { margin: 0; font-size: 28px; color: var(--ink); letter-spacing: 4px; font-weight: 900; }
@@ -115,3 +115,26 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--soft
 .shop section.card h2 span { border: 1.5px solid var(--tan); background: #fffaf2; padding: 6px 14px; box-shadow: 3px 3px 0 var(--soft); text-align: center; }
 .shop .price { color: var(--brand); }
 .shop .notice { display: none; }
+
+/* v0 redesign: serif headings, photo-led product cards, clearer peak days */
+:root { --serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif; }
+.shop section.card h2, .item h3, .announce .go, .tile b, .picked, .cal-head .title { font-family: var(--serif); }
+.shop section.card h2 { font-weight: 900; font-size: 19px; letter-spacing: 2px; }
+.shop section.card { padding: 20px 16px; margin: 20px 0; }
+.item { display: grid; gap: 14px; }
+.item + .item { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--soft); }
+.item .photo { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; background: var(--soft); }
+.item.custom .photo { aspect-ratio: 3 / 4; }
+.item-body .eyebrow { margin: 0; font-size: 12px; letter-spacing: 3px; color: var(--accent); font-style: italic; text-transform: uppercase; }
+.item-body h3 { margin: 2px 0 4px; font-size: 22px; font-weight: 900; letter-spacing: 1px; }
+.item-body .desc { margin: 0 0 8px; color: var(--muted); font-size: 15px; }
+.item-body .price { margin: 0 0 12px; font-size: 28px; font-weight: 800; color: var(--brand); font-family: var(--serif); }
+.item-body .price small { font-size: 14px; color: var(--muted); font-weight: 500; }
+@media (min-width: 640px) { .item { grid-template-columns: 240px 1fr; align-items: center; } }
+.day.peak { position: relative; }
+.day.peak::after { content: ''; position: absolute; top: 0; right: 0; border-top: 14px solid var(--brand); border-left: 14px solid transparent; }
+.day.peak .l { color: var(--brand); font-weight: 700; font-size: 12px; }
+.day.sel .l { color: #fff; }
+.announce .go { font-weight: 900; }
+@media (prefers-reduced-motion: no-preference) { .day, .tile, .btn { transition: transform .12s ease, background-color .12s ease; } .tile:hover, .btn:hover { transform: translateY(-1px); } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

@@ -5,6 +5,8 @@ const state = { qty: 1, packagingId: '', cardText: '', method: 'pickup', distric
 let data;
 
 const app = document.getElementById('app');
+// scroll helper (no scrollIntoView: it misbehaves inside embedded in-app browsers/iframes)
+const goTo = (id) => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' }); };
 const isLarge = () => state.qty >= data.settings.largeOrderQty;
 const dayOk = (d) => (isLarge() ? d.bookableLarge : d.bookableSmall);
 const pickedDay = () => data.days.find((d) => d.date === state.date);
@@ -112,31 +114,38 @@ function render() {
       h('img', { src: '/logo.png', alt: '英仔果子行 A Ying Fruit' }),
       h('div', { class: 'cartbox', 'aria-live': 'polite' }, `${state.qty} 份　`, h('span', { id: 'tot2' }, money(t.total)))),
     h('div', { class: 'announce' },
-      h('button', { class: 'go', type: 'button', onclick: () => document.getElementById('sec-date').scrollIntoView({ behavior: 'smooth' }) }, '📅 最新可送達日期查詢'),
+      h('button', { class: 'go', type: 'button', onclick: () => goTo('sec-date') }, '最新可送達日期查詢'),
       h('p', {}, `營業時間 ${s.openTime}–${s.closeTime}　固定週一公休（農曆初一、初二、十五、十六及國定假日照常營業）`),
       h('p', {}, '付款方式：現金。配送僅限永安、彌陀、岡山、梓官，其餘地區請本店自取。')),
     h('div', { class: 'wrap' },
     h('div', { class: 'tiles' },
-      h('button', { class: 'tile', type: 'button', onclick: () => document.getElementById('sec-item').scrollIntoView({ behavior: 'smooth' }) }, h('small', {}, 'standard'), h('b', {}, '公定版訂購')),
+      h('button', { class: 'tile', type: 'button', onclick: () => goTo('sec-item') }, h('small', {}, 'standard'), h('b', {}, '公定版訂購')),
       s.lineUrl ? h('a', { class: 'tile', href: s.lineUrl }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢'))
-        : h('button', { class: 'tile', type: 'button', onclick: () => document.getElementById('sec-item').scrollIntoView({ behavior: 'smooth' }) }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢')),
-      h('button', { class: 'tile', type: 'button', onclick: () => { state.method = 'pickup'; render(); document.getElementById('sec-way').scrollIntoView({ behavior: 'smooth' }); } }, h('small', {}, 'store pickup'), h('b', {}, '門市自取'))),
+        : h('button', { class: 'tile', type: 'button', onclick: () => goTo('sec-item') }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢')),
+      h('button', { class: 'tile', type: 'button', onclick: () => { state.method = 'pickup'; render(); goTo('sec-way'); } }, h('small', {}, 'store pickup'), h('b', {}, '門市自取'))),
 
     h('section', { class: 'card', id: 'sec-item' }, h('h2', {}, h('span', {}, '1. 選擇品項')),
-      h('div', { class: 'product' },
-        h('div', {}, h('div', { class: 'name' }, '公定版 果品'), h('div', { class: 'desc' }, '宮廟節慶適用')),
-        h('div', { class: 'price' }, money(s.standardPrice)),
-        h('div', { class: 'stepper' },
-          h('button', { type: 'button', 'aria-label': '減少', onclick: () => { state.qty = Math.max(1, +state.qty - 1); render(); } }, '−'),
-          h('input', { type: 'number', min: 1, max: 500, value: state.qty, 'aria-label': '數量', 'data-f': 'qty',
-            oninput: (e) => { state.qty = Math.max(1, Math.min(500, parseInt(e.target.value, 10) || 1)); update(); }, onchange: render }),
-          h('button', { type: 'button', 'aria-label': '增加', onclick: () => { state.qty = Math.min(500, +state.qty + 1); render(); } }, '＋'))),
-      h('p', { class: 'hint' }, isLarge() ? `大量訂購（${s.largeOrderQty} 份以上），需提前 ${s.minLeadDaysLarge} 天下訂` : `小量訂購，需提前 ${s.minLeadDaysSmall} 天下訂`),
-      h('hr'),
-      h('div', { class: 'product' },
-        h('div', {}, h('div', { class: 'name' }, '客製化'), h('div', { class: 'desc' }, '品項與價格需私訊討論（有溢價）')),
-        s.lineUrl ? h('a', { class: 'btn small ghost', href: s.lineUrl, style: 'text-decoration:none' }, '私訊 LINE 洽詢') : h('span', { class: 'hint' }, '請掃描下方 QR Code 加 LINE 洽詢')),
-      !s.lineUrl && h('img', { class: 'qr', src: '/line-qr.png', alt: '英仔果子行 LINE QR Code' })),
+      h('article', { class: 'item' },
+        h('img', { class: 'photo', src: '/images/standard-basket.jpg', alt: '公定版水果禮籃：鳳梨搭配水果，紅色蝴蝶結與藤編提籃', width: 900, height: 1125 }),
+        h('div', { class: 'item-body' },
+          h('p', { class: 'eyebrow' }, 'standard'),
+          h('h3', {}, '公定版 水果禮籃'),
+          h('p', { class: 'desc' }, '宮廟節慶適用，統一規格。'),
+          h('p', { class: 'price' }, money(s.standardPrice), h('small', {}, ' / 份')),
+          h('div', { class: 'stepper' },
+            h('button', { type: 'button', 'aria-label': '減少', onclick: () => { state.qty = Math.max(1, +state.qty - 1); render(); } }, '−'),
+            h('input', { type: 'number', min: 1, max: 500, value: state.qty, 'aria-label': '數量', 'data-f': 'qty',
+              oninput: (e) => { state.qty = Math.max(1, Math.min(500, parseInt(e.target.value, 10) || 1)); update(); }, onchange: render }),
+            h('button', { type: 'button', 'aria-label': '增加', onclick: () => { state.qty = Math.min(500, +state.qty + 1); render(); } }, '＋')),
+          h('p', { class: 'hint' }, isLarge() ? `大量訂購（${s.largeOrderQty} 份以上），需提前 ${s.minLeadDaysLarge} 天下訂` : `小量訂購，需提前 ${s.minLeadDaysSmall} 天下訂`))),
+      h('article', { class: 'item custom' },
+        h('img', { class: 'photo', src: '/images/custom-example.jpg', alt: '客製化搭配範例：木瓜、香蕉、蘋果與柑橘放在彩色編織提籃', width: 900, height: 1200, loading: 'lazy' }),
+        h('div', { class: 'item-body' },
+          h('p', { class: 'eyebrow' }, 'custom'),
+          h('h3', {}, '客製化 水果禮籃'),
+          h('p', { class: 'desc' }, '依需求搭配品項，需私訊討論，價格有溢價。圖為搭配範例，實際品項依討論為準。'),
+          s.lineUrl ? h('a', { class: 'btn small ghost', href: s.lineUrl, style: 'text-decoration:none' }, '私訊 LINE 洽詢')
+            : h('div', {}, h('p', { class: 'hint' }, '請掃描 QR Code 加 LINE 洽詢'), h('img', { class: 'qr', src: '/line-qr.png', alt: '英仔果子行 LINE QR Code' }))))),
 
     h('section', { class: 'card' }, h('h2', {}, h('span', {}, '2. 包裝與卡片')),
       field('包裝', h('select', { 'data-f': 'pack', onchange: (e) => { state.packagingId = e.target.value; render(); } },
