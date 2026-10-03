@@ -119,3 +119,24 @@ test('purpose rules: stricter of purpose and quantity lead time; 宮廟進香 is
   assert.equal((await p({ purposeId: 'nope' })).status, 400);
   assert.equal((await p({ purposeId: undefined })).status, 400);
 });
+
+test('redis (Upstash REST) store: get/set/list with prefix scan', async () => {
+  const { redisStore } = await import('../lib/store.js');
+  const mem = new Map();
+  const fakeFetch = async (url, init) => {
+    assert.match(init.headers.Authorization, /^Bearer tok$/);
+    const [c, ...a] = JSON.parse(init.body);
+    let result;
+    if (c === 'GET') result = mem.has(a[0]) ? mem.get(a[0]) : null;
+    else if (c === 'SET') { mem.set(a[0], a[1]); result = 'OK'; }
+    else if (c === 'SCAN') { const p = a[2].slice(0, -1); result = ['0', [...mem.keys()].filter((k) => k.startsWith(p))]; }
+    return new Response(JSON.stringify({ result }));
+  };
+  const s = redisStore('https://r.example', 'tok', fakeFetch);
+  assert.equal(await s.get('x'), null);
+  await s.set('orders/1', { a: 1 }); await s.set('orders/2', { a: 2 }); await s.set('settings', { z: 1 });
+  assert.deepEqual(await s.get('orders/1'), { a: 1 });
+  assert.deepEqual((await s.list('orders/')).sort(), ['orders/1', 'orders/2']);
+  const bad = redisStore('https://r.example', 'tok', async () => new Response(JSON.stringify({ error: 'nope' }), { status: 401 }));
+  await assert.rejects(() => bad.get('x'), /Redis/);
+});

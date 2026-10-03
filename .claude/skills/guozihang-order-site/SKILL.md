@@ -87,7 +87,7 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - Prices are integers in NT$; no floating-point money.
 - Validate on the server: delivery date within allowed range, required fields, text length. Do not trust the client.
 - Test the date logic: timezone edges, month/year boundaries, leap months, blocked dates, daily caps.
-- Hosting target: Netlify (static front end + serverless functions). Ask before adding paid services.
+- Hosting: **Vercel or Netlify** (owner prefers Vercel). Static `public/` + one serverless function (`api/[...path].js` on Vercel, `netlify/functions/api.mjs` on Netlify) sharing `lib/api.js`. Storage auto-selects: Redis REST (Vercel/Upstash) > Netlify Blobs > local files. Ask before adding paid services (note: Vercel Hobby is non-commercial only).
 
 ## Code layout (implemented)
 - `lib/rules.js` — date/open/lead-time/cap rules (single source of truth; the browser only displays what `/api/public` returns). `lib/dates.js` — Taipei-time + lunar helpers. `lib/api.js` — API routes. `lib/line.js` — LINE push. `lib/store.js` — Netlify Blobs in production, JSON files locally.
