@@ -224,3 +224,9 @@ a.btn { display: inline-block; text-align: center; text-decoration: none; }
 .service h2, .how h2, .shop-info h2 { font-size: 20px; }
 p, li, .u-card span, .noticebar { text-wrap: pretty; }
 .u-card span, .noticebar { line-height: 1.7; }
+
+/* hero text: each line stays on one row at any phone width */
+.hero2 h1 { white-space: nowrap; font-size: min(34px, calc((100vw - 32px) / 13)); letter-spacing: 0; }
+.hero2 p.sub { margin: 0 0 16px; font-size: min(17px, calc((100vw - 32px) / 15)); line-height: 1.8; }
+.hero2 p.sub span { display: block; white-space: nowrap; }
+@media (min-width: 720px) { .hero2 h1 { font-size: 34px; } .hero2 p.sub { font-size: 17px; } }
