@@ -117,7 +117,7 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--soft
 .shop .notice { display: none; }
 
 /* v0 redesign: serif headings, photo-led product cards, clearer peak days */
-:root { --serif: "Noto Sans TC", -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; }
+:root { --serif: "Noto Serif TC", "Songti TC", "PMingLiU", "MingLiU", serif; }
 .shop section.card h2, .item h3, .announce .go, .tile b, .picked, .cal-head .title { font-family: var(--serif); }
 .shop section.card h2 { font-weight: 900; font-size: 19px; letter-spacing: 2px; color: var(--brand); }
 .item-body h3, .announce .go, .tile b, .picked { font-weight: 900; }

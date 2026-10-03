@@ -18,6 +18,13 @@ http.createServer(async (req, res) => {
       res.writeHead(r.status, Object.fromEntries(r.headers));
       return res.end(Buffer.from(await r.arrayBuffer()));
     }
+    if (process.env.FONT_DIR && url.pathname.startsWith('/__fonts/')) {
+      const f = path.join(process.env.FONT_DIR, path.normalize(url.pathname.slice(9)));
+      if (!f.startsWith(process.env.FONT_DIR)) throw new Error('bad path');
+      const ext = path.extname(f);
+      res.writeHead(200, { 'Content-Type': ext === '.css' ? 'text/css' : 'font/woff2' });
+      return res.end(await fs.readFile(f));
+    }
     let p = url.pathname === '/' ? '/index.html' : url.pathname;
     if (p === '/admin') p = '/admin.html';
     const file = path.join('public', path.normalize(p));

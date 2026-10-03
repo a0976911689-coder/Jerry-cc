@@ -1,9 +1,11 @@
 import { h, money, api } from './common.js';
+import { drawPoster, downloadCanvas } from './poster.js';
 
 const app = document.getElementById('app');
 let token = sessionStorage.getItem('gzh_token') || '';
 let tab = 'today';
 let date = '';
+let posterMonth = '';
 const STATUS = { new: '新訂單', confirmed: '已確認', prepared: '已備貨', delivered: '已送達', cancelled: '已取消' };
 
 const call = (path, opts = {}) => api(path, { ...opts, token }).catch((e) => {
@@ -26,7 +28,7 @@ function renderLogin(msg = '') {
 }
 
 function tabs() {
-  const items = [['today', '今日／備貨'], ['orders', '訂單'], ['new', '建立客製化訂單'], ['settings', '設定']];
+  const items = [['today', '今日／備貨'], ['orders', '訂單'], ['new', '建立客製化訂單'], ['poster', '月曆海報'], ['settings', '設定']];
   return h('div', { class: 'tabs', role: 'tablist' }, items.map(([k, l]) => h('button', { role: 'tab', 'aria-selected': tab === k ? 'true' : 'false',
     onclick: () => { tab = k; start(); } }, l)),
     h('button', { onclick: () => { token = ''; sessionStorage.removeItem('gzh_token'); renderLogin(); } }, '登出'));
@@ -101,6 +103,23 @@ function viewNew() {
     } }, '建立訂單'));
 }
 
+async function viewPoster() {
+  const now = new Date();
+  let month = posterMonth || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  const canvas = h('canvas', { style: 'width:100%;height:auto;border:1.5px solid var(--line);background:#fff', role: 'img', 'aria-label': '月曆海報預覽' });
+  const err = h('p', { class: 'error' });
+  const render = async () => {
+    err.textContent = '';
+    try { const r = await call(`/admin/month?month=${month}`); await drawPoster(canvas, r.days); } catch (e) { err.textContent = e.message; }
+  };
+  const input = h('input', { type: 'month', value: month, 'aria-label': '選擇月份', onchange: (e) => { month = posterMonth = e.target.value; render(); } });
+  render();
+  return h('section', { class: 'card' }, h('h2', {}, '月曆海報'),
+    h('p', { class: 'hint' }, '依「設定」裡的特別營業日與休息日自動產生每月營業．拜拜日程，確認無誤後下載 PNG 發佈。'),
+    h('div', { class: 'row' }, input, h('button', { class: 'btn small', onclick: () => downloadCanvas(canvas, `營業拜拜日程-${month}.png`) }, '下載 PNG')),
+    err, h('div', { style: 'margin-top:12px' }, canvas));
+}
+
 async function viewSettings() {
   const { settings: s } = await call('/admin/settings');
   const num = (k, label, hint) => { const i = h('input', { type: 'number', value: s[k] }); return [k, i, h('div', {}, h('label', {}, label), i, hint && h('p', { class: 'hint' }, hint))]; };
@@ -135,7 +154,7 @@ async function viewSettings() {
 async function start() {
   if (!token) return renderLogin();
   try {
-    const view = tab === 'today' ? await viewToday() : tab === 'orders' ? await viewOrders() : tab === 'new' ? viewNew() : await viewSettings();
+    const view = tab === 'today' ? await viewToday() : tab === 'orders' ? await viewOrders() : tab === 'new' ? viewNew() : tab === 'poster' ? await viewPoster() : await viewSettings();
     app.replaceChildren(h('header', { class: 'hero' }, h('h1', {}, '英仔果子行 後台')), tabs(), view);
   } catch (e) { if (e.status !== 401) app.replaceChildren(h('p', { class: 'error' }, e.message)); }
 }
