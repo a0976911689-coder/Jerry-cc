@@ -14,7 +14,10 @@ ADMIN_PASSWORD=你的密碼 npm run dev   # http://localhost:8888 ，後台 /adm
 npm test
 ```
 
-## 部署（Netlify）
+## 部署
+支援 **Vercel**（見 `docs/Vercel部署.md`）與 **Netlify**，擇一。以下為 Netlify 步驟：
+
+### Netlify
 1. 連接此 repo，發佈目錄 `public`，函式目錄 `netlify/functions`（已在 `netlify.toml` 設定）。
 2. 環境變數：
    - `ADMIN_PASSWORD`（必填，後台密碼）
