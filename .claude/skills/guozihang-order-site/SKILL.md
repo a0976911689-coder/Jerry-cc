@@ -72,15 +72,15 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - **Opening hours end at 12:00 noon (中午 12:00 打烊).** After 12:00 Taipei time, same-day orders/pickups are closed. Opens at 06:00. Hours live in config.
 - **Closed every Monday (固定週一公休).**
 - **Exception — open on a Monday if that day is** 農曆初一, 初二, 十五, 十六, or a national holiday (國定假日 / 年假). Tue–Sun are always open.
-- The delivery-date picker must follow this: Mondays are blocked unless an exception applies. The lunar exception is computed from the lunar calendar library; national holidays come from an admin-editable list (Taiwan's holiday calendar changes yearly, so do not hard-code years).
+- The delivery-date picker must follow this: Mondays are blocked unless an exception applies. The lunar exception is computed from the lunar calendar library; national holidays and one-off openings come from the admin-editable `specialOpenDates` list (Taiwan's holiday calendar changes yearly, so do not hard-code years).
 - Show the owner-facing reason on the day ("週一公休" / "初一，正常營業").
 - Urgent requests outside these rules (急需): the picker shows "急件請私訊 LINE 討論" with a LINE link; the site does not auto-accept blocked dates.
 
 ### Order limits (接單與預訂)
 - **Daily order cap: NT$500,000 per delivery date**, measured by total order amount (not order count). Past record is about NT$200,000/day. Block a date (and show "該日已額滿，請私訊 LINE") when accepting an order would push that date over the cap. Cap lives in config; check it server-side in a transaction-safe way.
 - **Minimum lead time (confirmed): no same-day orders. Small orders need ≥ 3 days ahead; large orders need ≥ 7 days ahead.** There are no delivery time slots.
-- "Large" threshold is **not confirmed by the owner**: implemented as `largeOrderQty` (default 10 standard sets) in settings, editable in the admin. Confirm with the owner.
-- Maximum advance booking is also **unconfirmed** (owner earlier said "up to a week ahead", which conflicts with the 7-day minimum for large orders): implemented as `maxAdvanceDays` (default 90), editable in the admin.
+- **Large order = 10 standard sets or more (confirmed by owner)**: `largeOrderQty` = 10 in settings, editable in the admin.
+- **Maximum advance booking: 14 days (two weeks), set from the owner's answer** ('大量下訂…兩個禮拜以前'). So the bookable window is 3–14 days for small orders and 7–14 days for large orders. `maxAdvanceDays` = 14, editable. Re-confirm if the owner meant a 14-day *minimum* for large orders instead.
 
 ## Working rules
 - Ask the owner before inventing business rules (large-order threshold, max advance booking, store address, packaging options and fees). Put them in config/data, not hard-coded.
@@ -99,3 +99,13 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - Shop name: **英仔果子行 (A Ying Fruit)**. Logo: `public/logo.png` (red apple, black brush lettering, orange "A Ying Fruit"); LINE QR: `public/line-qr.png`.
 - Layout follows the 六月初一 mobile storefront (owner screenshot): white top bar with logo + cart total, black announcement band with a copper "可送達日期查詢" button, three wine-red tiles (公定版 / 客製化 / 門市自取), cream `#f5f0e8` background, section titles centred in a tan bordered box between tan lines. Colours: wine `#8b2a38`, copper `#c97b3f`, tan `#b08d62`, dark-brown ink; logo keeps its own red/black/orange.
 - Square corners only. Never copy 六月初一 logo, photos or copy.
+
+## Monthly calendar & worship days (from the owner's October 2026 poster)
+- The owner publishes a monthly 營業．拜拜日程 poster. Labels used: **公休** (Mondays), **正常營業** (a Monday opened as an exception, e.g. 2026-10-26, the day after 公司拜拜 on 10/25), **敬果日** and **公司拜拜**.
+- **敬果日** = lunar 十四, 十五, 初一 and the last day of the previous lunar month (e.g. 10/9 八月廿九, 10/10 九月初一, 10/23, 10/24). **公司拜拜** = lunar 初二, 十六 (10/11, 10/25). Staff must prepare offering fruit on these days; the admin reminder lists both.
+- Only 初一/初二/十五/十六 auto-open a Monday. Other Monday openings are one-off and entered by the owner each month in admin settings as `特別營業日` lines (`YYYY-MM-DD 備註`); extra closures go in `額外休息日`. The code seeds `2026-10-26 正常營業`.
+- Unconfirmed: whether a Monday that is 十四 or the 月底 eve should also open (currently closed unless listed).
+- `lib/rules.test` asserts the October 2026 poster dates, so rule changes that break the poster fail tests.
+
+## Packaging & extra services (confirmed)
+- Packaging has **no surcharge** (single option 標準包裝, fee 0). Products are mostly used for temple 結緣 (blessing offerings). Any other extra service → customer messages LINE; do not add self-serve extras.

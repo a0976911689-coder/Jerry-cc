@@ -65,3 +65,13 @@ test('daily cap enforced (counts custom orders, cancelled ones free the slot)', 
   await call('PATCH', `/admin/orders/${big.body.order.id}`, { status: 'cancelled' }, token);
   assert.equal((await call('POST', '/orders', { ...base, date: '2026-10-07', qty: 2 })).status, 201);
 });
+
+test('public month calendar needs no login and matches the owner poster', async () => {
+  const r = await call('GET', '/calendar?month=2026-10');
+  assert.equal(r.status, 200);
+  assert.equal(r.body.days.length, 31);
+  assert.equal(r.body.days[25].open, true); // 10/26 special opening
+  assert.equal(r.body.days[4].open, false); // 10/5 Monday closed
+  assert.equal(r.body.days[9].tag, '敬果日'); // 10/10
+  assert.equal((await call('GET', '/calendar?month=bad')).status, 400);
+});
