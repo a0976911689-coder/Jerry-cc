@@ -52,7 +52,7 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 ## Confirmed business rules (from the owner)
 
 ### Products — real fruit (真實果品)
-- **公定版 (standard set): NT$600.** Mainly used for temple festivals (宮廟節慶). Orderable directly on the site.
+- **公訂版 (standard set): NT$600.** Mainly used for temple festivals (宮廟節慶). Orderable directly on the site.
 - **客製化 (custom): discuss via LINE DM first; priced at a premium.** The site must NOT show a self-serve price or checkout for custom orders. Show a "私訊 LINE 洽詢" button instead. Staff can create a custom order in the admin after agreeing price (price is entered manually per order).
 - The card text / packaging options above apply to the standard set; custom-order details are captured in the admin note.
 
@@ -97,7 +97,7 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 
 ## Brand & visual style
 - Shop name: **英仔果子行 (A Ying Fruit)**. Logo: `public/logo.png` (red apple, black brush lettering, orange "A Ying Fruit"); LINE QR: `public/line-qr.png`.
-- Layout follows the 六月初一 mobile storefront (owner screenshot): white top bar with logo + cart total, black announcement band with a copper "可送達日期查詢" button, three wine-red tiles (公定版 / 客製化 / 門市自取), cream `#f5f0e8` background, section titles centred in a tan bordered box between tan lines. Colours: wine `#8b2a38`, copper `#c97b3f`, tan `#b08d62`, dark-brown ink; logo keeps its own red/black/orange.
+- Layout follows the 六月初一 mobile storefront (owner screenshot): white top bar with logo + cart total, black announcement band with a copper "可送達日期查詢" button, three wine-red tiles (公訂版 / 客製化 / 門市自取), cream `#f5f0e8` background, section titles centred in a tan bordered box between tan lines. Colours: wine `#8b2a38`, copper `#c97b3f`, tan `#b08d62`, dark-brown ink; logo keeps its own red/black/orange.
 - Square corners only. Never copy 六月初一 logo, photos or copy.
 
 ## Monthly calendar & worship days (from the owner's October 2026 poster)
@@ -109,3 +109,7 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 
 ## Packaging & extra services (confirmed)
 - Packaging has **no surcharge** (single option 標準包裝, fee 0). Products are mostly used for temple 結緣 (blessing offerings). Any other extra service → customer messages LINE; do not add self-serve extras.
+
+## Order notifications
+- Naming: the standard product is **公訂版** (owner's wording), not 公定版.
+- New orders notify via (1) Google Apps Script web app → Google Sheet row + email (`lib/notify.js`, `docs/google-apps-script.gs`, env `GOOGLE_SCRIPT_URL` / `GOOGLE_SCRIPT_SECRET`) and (2) LINE push when configured. Orders are saved first; notification failures are recorded on the order and shown in admin, never block the order.
