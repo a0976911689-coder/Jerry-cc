@@ -8,7 +8,7 @@ let cal = null; // { month, days } for the 營業日程 section
 
 const app = document.getElementById('app');
 // scroll helper (no scrollIntoView: it misbehaves inside embedded in-app browsers/iframes)
-const goTo = (id) => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' }); };
+const goTo = (id) => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 16, behavior: 'smooth' }); };
 const isLarge = () => state.qty >= data.settings.largeOrderQty;
 const purpose = () => data.settings.purposes.find((p) => p.id === state.purposeId);
 // Stricter of the quantity rule and the purpose rule (mirrors lib/rules.js on the server).

@@ -211,3 +211,9 @@ a.btn { display: inline-block; text-align: center; text-decoration: none; }
 .bar { background: var(--bg); border-top: 1px solid var(--line); }
 .bar .sum b { color: var(--brand); }
 .hero-cta .btn { padding: 14px 10px; letter-spacing: 1px; white-space: nowrap; }
+
+/* bigger logo in the top bar (not sticky, so it can be large) */
+.topbar { position: static; padding: 10px 16px; max-width: 920px; margin: 0 auto; background: transparent; border-bottom: 0; }
+.topbar img { height: 104px; width: auto; }
+@media (min-width: 720px) { .topbar img { height: 128px; } .topbar nav button { font-size: 16px; } }
+.hero2 { padding-top: 8px; }
