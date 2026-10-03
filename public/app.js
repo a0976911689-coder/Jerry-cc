@@ -171,7 +171,7 @@ function render() {
         h('button', { type: 'button', onclick: () => goTo('sec-contact') }, '聯絡我們'))),
     h('section', { class: 'hero2' },
       h('div', { class: 'hero-copy' },
-        h('h1', {}, '拜拜的心意，', h('br'), '幫你準備好。'),
+        h('h1', {}, '您的心意，', h('br'), '英仔幫你款到好'),
         h('p', {}, '初一十五、神明聖誕、宮廟進香，敬神水果禮籃歡迎提前預訂。'),
         h('div', { class: 'hero-cta' }, lineBtn('LINE 詢問禮籃'), h('button', { class: 'btn ghost', type: 'button', onclick: () => goTo('sec-item') }, '直接線上預訂'))),
       h('img', { class: 'hero-photo', src: '/images/standard-basket.jpg', alt: '敬神水果禮籃：鳳梨搭配水果，紅色蝴蝶結與藤編提籃', width: 900, height: 1125 })),
