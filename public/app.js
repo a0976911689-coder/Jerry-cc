@@ -1,7 +1,7 @@
 import { h, money, api } from './common.js';
 import { drawPoster, downloadCanvas, summaryLines } from './poster.js';
 
-const state = { qty: 1, packagingId: '', cardText: '', method: 'pickup', district: '', address: '', date: '',
+const state = { qty: 1, purposeId: '', packagingId: '', cardText: '', method: 'pickup', district: '', address: '', date: '',
   name: '', phone: '', note: '', month: '', submitting: false, error: '' };
 let data;
 let cal = null; // { month, days } for the 營業日程 section
@@ -10,7 +10,14 @@ const app = document.getElementById('app');
 // scroll helper (no scrollIntoView: it misbehaves inside embedded in-app browsers/iframes)
 const goTo = (id) => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 76, behavior: 'smooth' }); };
 const isLarge = () => state.qty >= data.settings.largeOrderQty;
-const dayOk = (d) => (isLarge() ? d.bookableLarge : d.bookableSmall);
+const purpose = () => data.settings.purposes.find((p) => p.id === state.purposeId);
+// Stricter of the quantity rule and the purpose rule (mirrors lib/rules.js on the server).
+const leadDays = () => Math.max(isLarge() ? data.settings.minLeadDaysLarge : data.settings.minLeadDaysSmall, (purpose() || {}).leadDays || 0);
+const dayOk = (d) => {
+  const p = purpose();
+  if (!p || p.contactOnly) return false;
+  return d.open && !d.full && data.days.indexOf(d) >= leadDays() && data.days.indexOf(d) <= data.settings.maxAdvanceDays;
+};
 const pickedDay = () => data.days.find((d) => d.date === state.date);
 
 function totals() {
@@ -26,7 +33,7 @@ function dayReason(d) {
   const s = data.settings;
   if (!d.open) return d.reason;
   if (d.full) return '額滿';
-  const lead = isLarge() ? s.minLeadDaysLarge : s.minLeadDaysSmall;
+  const lead = leadDays();
   const idx = data.days.indexOf(d);
   return idx < lead ? `需提前${lead}天` : '';
 }
@@ -64,7 +71,7 @@ function calendar() {
       h('span', {}, h('i', { style: 'background:var(--peak-bg);border:1px solid var(--accent)' }), '敬果日・公司拜拜（備貨日）'),
       h('span', {}, h('i', { style: 'border:1px dashed var(--dis)' }), '不可選')),
     p && state.date ? h('p', { class: 'picked' }, `已選：${p.date}（週${p.weekday}）農曆${p.lunarMonth}${p.lunarDay}${p.tag ? '・' + p.tag : ''}`) : h('p', { class: 'hint' }, '請點選日期'),
-    h('p', { class: 'hint' }, `小量訂購需提前 ${data.settings.minLeadDaysSmall} 天；${data.settings.largeOrderQty} 份以上需提前 ${data.settings.minLeadDaysLarge} 天；不可當天訂、當天送。`));
+    h('p', { class: 'hint' }, purpose() && !purpose().contactOnly ? `目前條件（${purpose().name}、${state.qty} 份）需提前 ${leadDays()} 天下訂，最多可預訂 ${data.settings.maxAdvanceDays} 天內；不可當天訂、當天送。` : '請先選擇禮籃用途。'));
 }
 
 async function loadCal(month) {
@@ -97,12 +104,26 @@ function businessCalendar() {
     canvas);
 }
 
+const daysLabel = (n) => (n % 7 === 0 ? `${n / 7} 週` : `${n} 天`);
+function leadNotice() {
+  const ps = data.settings.purposes;
+  const parts = ps.filter((p) => !p.contactOnly && p.leadDays > 0).map((p) => `${p.name}禮籃請於${daysLabel(p.leadDays)}前預訂`);
+  const contact = ps.filter((p) => p.contactOnly).map((p) => `${p.name}需求歡迎先私訊聯絡`);
+  return [...parts, ...contact].join('；') + '。';
+}
+const lineBtn = (label, cls = '') => (data.settings.lineUrl
+  ? h('a', { class: `btn ${cls}`, href: data.settings.lineUrl, target: '_blank', rel: 'noopener' }, label)
+  : h('button', { class: `btn ${cls}`, type: 'button', onclick: () => goTo('sec-contact') }, label));
+
 function field(label, input, hint) { return h('div', {}, h('label', {}, label), input, hint && h('p', { class: 'hint' }, hint)); }
 
 async function submit() {
   state.error = '';
   const s = data.settings;
-  if (!state.date) state.error = '請選擇送達日期';
+  const pu = purpose();
+  if (!pu) state.error = '請選擇禮籃用途';
+  else if (pu.contactOnly) state.error = `${pu.name}請先私訊 LINE 聯絡我們`;
+  else if (!state.date) state.error = '請選擇送達日期';
   else if (!state.name.trim()) state.error = '請填寫姓名';
   else if (!state.phone.trim()) state.error = '請填寫聯絡電話';
   else if (state.method === 'delivery' && (!state.district || !state.address.trim())) state.error = '請選擇區域並填寫地址';
@@ -142,20 +163,31 @@ function render() {
 
   const delivery = state.method === 'delivery';
   app.replaceChildren(
-    h('div', { class: 'topbar' },
+    h('header', { class: 'topbar' },
       h('img', { src: '/logo.png', alt: '英仔果子行 A Ying Fruit' }),
-      h('div', { class: 'cartbox', 'aria-live': 'polite' }, `${state.qty} 份　`, h('span', { id: 'tot2' }, money(t.total)))),
-    h('div', { class: 'announce' },
-      h('button', { class: 'go', type: 'button', onclick: () => goTo('sec-date') }, '最新可送達日期查詢'),
-      h('p', {}, `營業時間 ${s.openTime}–${s.closeTime}　固定週一公休（農曆初一、初二、十五、十六及國定假日照常營業）`),
-      h('p', {}, '付款方式：現金。配送僅限永安、彌陀、岡山、梓官，其餘地區請本店自取。')),
+      h('nav', { 'aria-label': '網站導覽' },
+        h('button', { type: 'button', onclick: () => goTo('sec-service') }, '禮籃服務'),
+        h('button', { type: 'button', onclick: () => goTo('sec-how') }, '預訂方式'),
+        h('button', { type: 'button', onclick: () => goTo('sec-contact') }, '聯絡我們'))),
+    h('section', { class: 'hero2' },
+      h('div', { class: 'hero-copy' },
+        h('h1', {}, '拜拜的心意，', h('br'), '幫你準備好。'),
+        h('p', {}, '初一十五、神明聖誕、宮廟進香，敬神水果禮籃歡迎提前預訂。'),
+        h('div', { class: 'hero-cta' }, lineBtn('LINE 詢問禮籃'), h('button', { class: 'btn ghost', type: 'button', onclick: () => goTo('sec-item') }, '直接線上預訂'))),
+      h('img', { class: 'hero-photo', src: '/images/standard-basket.jpg', alt: '敬神水果禮籃：鳳梨搭配水果，紅色蝴蝶結與藤編提籃', width: 900, height: 1125 })),
+    h('section', { class: 'service', id: 'sec-service' },
+      h('h2', {}, h('span', {}, '敬神禮籃')), h('p', { class: 'price-line' }, `每籃 ${money(s.standardPrice)}`),
+      h('div', { class: 'cards3' },
+        [['初一、十五', '誠心備禮，日常祭拜更添心意。'], ['神明聖誕', '感謝神恩，備上敬意表達虔誠。'], ['宮廟進香', '隨香祈福，帶著心意一同前行。']].map(([t, d]) =>
+          h('div', { class: 'u-card' }, h('b', {}, t), h('span', {}, d))))),
+    h('section', { class: 'how', id: 'sec-how' },
+      h('h2', {}, h('span', {}, '怎麼預訂？')),
+      h('ol', { class: 'steps' },
+        h('li', {}, h('i', {}, '1'), '在網站選擇用途、數量與取貨日期，或用 LINE 告訴我們'),
+        h('li', {}, h('i', {}, '2'), '與店家確認禮籃內容及取貨安排'),
+        h('li', {}, h('i', {}, '3'), '約定日期來店自取，或配送到府（現金付款）')),
+      h('p', { class: 'noticebar' }, leadNotice())),
     h('div', { class: 'wrap' },
-    h('div', { class: 'tiles' },
-      h('button', { class: 'tile', type: 'button', onclick: () => goTo('sec-item') }, h('small', {}, 'standard'), h('b', {}, '公訂版訂購')),
-      s.lineUrl ? h('a', { class: 'tile', href: s.lineUrl }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢'))
-        : h('button', { class: 'tile', type: 'button', onclick: () => goTo('sec-item') }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢')),
-      h('button', { class: 'tile', type: 'button', onclick: () => { state.method = 'pickup'; render(); goTo('sec-way'); } }, h('small', {}, 'store pickup'), h('b', {}, '門市自取'))),
-
     h('section', { class: 'card', id: 'sec-cal' }, h('h2', {}, h('span', {}, '營業日程')), businessCalendar()),
 
     h('section', { class: 'card', id: 'sec-item' }, h('h2', {}, h('span', {}, '1. 選擇品項')),
@@ -165,13 +197,18 @@ function render() {
           h('p', { class: 'eyebrow' }, 'standard'),
           h('h3', {}, '公訂版 水果禮籃'),
           h('p', { class: 'desc' }, '宮廟節慶適用，統一規格。'),
+          h('p', { class: 'lbl' }, '禮籃用途'),
+          h('div', { class: 'chips', role: 'radiogroup', 'aria-label': '禮籃用途' },
+            s.purposes.map((p) => h('label', { class: 'chip' }, h('input', { type: 'radio', name: 'purpose', value: p.id, checked: state.purposeId === p.id,
+              onchange: () => { state.purposeId = p.id; render(); } }), h('span', {}, p.name)))),
+          purpose() && purpose().contactOnly && h('div', { class: 'callout' }, h('p', {}, `${purpose().name}需求請先私訊 LINE 聯絡，我們會與您確認內容與安排。`), lineBtn('LINE 聯絡我們', 'small')),
           h('p', { class: 'price' }, money(s.standardPrice), h('small', {}, ' / 份')),
           h('div', { class: 'stepper' },
             h('button', { type: 'button', 'aria-label': '減少', onclick: () => { state.qty = Math.max(1, +state.qty - 1); render(); } }, '−'),
             h('input', { type: 'number', min: 1, max: 500, value: state.qty, 'aria-label': '數量', 'data-f': 'qty',
               oninput: (e) => { state.qty = Math.max(1, Math.min(500, parseInt(e.target.value, 10) || 1)); update(); }, onchange: render }),
             h('button', { type: 'button', 'aria-label': '增加', onclick: () => { state.qty = Math.min(500, +state.qty + 1); render(); } }, '＋')),
-          h('p', { class: 'hint' }, isLarge() ? `大量訂購（${s.largeOrderQty} 份以上），需提前 ${s.minLeadDaysLarge} 天下訂` : `小量訂購，需提前 ${s.minLeadDaysSmall} 天下訂`))),
+          h('p', { class: 'hint' }, `${isLarge() ? `大量訂購（${s.largeOrderQty} 份以上）` : '小量訂購'}・${purpose() ? purpose().name : ''}：需提前 ${leadDays()} 天下訂`))),
       h('article', { class: 'item custom' },
         h('img', { class: 'photo', src: '/images/custom-example.jpg', alt: '客製化搭配範例：木瓜、香蕉、蘋果與柑橘放在彩色編織提籃', width: 900, height: 1200, loading: 'lazy' }),
         h('div', { class: 'item-body' },
@@ -212,6 +249,13 @@ function render() {
       field('備註（選填）', text('note', { maxlength: 200 }))),
 
     state.error && h('p', { class: 'error', role: 'alert' }, state.error)),
+    h('footer', { class: 'shop-info', id: 'sec-contact' },
+      h('h2', {}, h('span', {}, '來店找阿嬤跟小豪')),
+      h('ul', {},
+        h('li', {}, `營業時間　${s.openTime}–${s.closeTime}（週一公休，初一、初二、十五、十六照常營業）`),
+        h('li', {}, '取貨方式　來店自取，或配送（永安、彌陀、岡山、梓官）'),
+        h('li', {}, `地址　${s.storeAddress || ''}`)),
+      h('div', { class: 'hero-cta' }, lineBtn('LINE 詢問與預訂'), s.mapUrl && h('a', { class: 'btn ghost', href: s.mapUrl, target: '_blank', rel: 'noopener' }, '在 Google 地圖查看'))),
     h('div', { class: 'bar' }, h('div', { class: 'inner' },
       h('div', { class: 'sum' }, `${state.qty} 份${t.shipping ? ` ＋運費 ${money(t.shipping)}` : ''}・現金付款`, h('b', { id: 'tot' }, money(t.total))),
       h('button', { class: 'btn', type: 'button', disabled: state.submitting, onclick: submit }, state.submitting ? '送出中…' : '送出訂單'))));
@@ -227,6 +271,7 @@ function update() { const v = money(totals().total); for (const id of ['tot', 't
 try {
   data = await api('/public');
   state.packagingId = data.settings.packagingOptions[0].id;
+  state.purposeId = (data.settings.purposes.find((p) => !p.contactOnly) || data.settings.purposes[0]).id;
   data.today = data.today || data.days[0].date;
   loadCal();
   render();

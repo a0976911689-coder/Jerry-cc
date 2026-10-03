@@ -16,7 +16,7 @@ const call = async (method, p, body, token) => {
   }), NOW);
   return { status: r.status, body: await r.json() };
 };
-const base = { name: '王小明', phone: '0912345678', method: 'pickup', date: '2026-10-06', qty: 2, packagingId: 'standard', cardText: '平安順心\n福氣滿滿' };
+const base = { name: '王小明', phone: '0912345678', method: 'pickup', date: '2026-10-06', qty: 2, packagingId: 'standard', purposeId: 'other', cardText: '平安順心\n福氣滿滿' };
 
 test('place a pickup order', async () => {
   const r = await call('POST', '/orders', base);
@@ -81,7 +81,7 @@ test('sheet/email notification posts a row and survives failures', async () => {
   const order = { id: 'X-1', createdAt: '2026-10-03T00:00:00Z', date: '2026-10-07', dateInfo: { lunarMonth: '九月', lunarDay: '十七', tag: '' },
     method: 'delivery', customer: { name: '王', phone: '0912345678', district: '岡山區', address: '甘肅路1號' }, kind: 'standard', qty: 2,
     packagingName: '標準包裝', cardText: '平安', note: '', totals: { total: 1250, shipping: 50 } };
-  assert.equal(sheetRow(order).length, 15);
+  assert.equal(sheetRow(order).length, 16);
   assert.equal((await pushToSheet(order)).ok, false); // not configured
   process.env.GOOGLE_SCRIPT_URL = 'https://script.example/exec'; process.env.GOOGLE_SCRIPT_SECRET = 's';
   let sent;
@@ -106,4 +106,16 @@ test('admin login locks after 3 wrong passwords for 15 minutes', async () => {
   // a different IP is unaffected
   const other = await handle(new Request('http://x/api/admin/login', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': '8.8.8.8' }, body: JSON.stringify({ password: 'test-pass' }) }), t0);
   assert.equal(other.status, 200);
+});
+
+test('purpose rules: stricter of purpose and quantity lead time; 宮廟進香 is LINE-only', async () => {
+  const p = (extra) => call('POST', '/orders', { ...base, ...extra });
+  assert.equal((await p({ purposeId: 'monthly', date: '2026-10-06' })).status, 400); // needs 7 days, only 3
+  assert.equal((await p({ purposeId: 'monthly', date: '2026-10-10' })).status, 201);  // 7 days
+  assert.equal((await p({ purposeId: 'festival', date: '2026-10-14' })).status, 400); // needs 14 days, only 11
+  assert.equal((await p({ purposeId: 'festival', date: '2026-10-17' })).status, 201); // 14 days
+  const pil = await p({ purposeId: 'pilgrimage', date: '2026-10-17' });
+  assert.equal(pil.status, 400); assert.match(pil.body.error, /LINE/);
+  assert.equal((await p({ purposeId: 'nope' })).status, 400);
+  assert.equal((await p({ purposeId: undefined })).status, 400);
 });
