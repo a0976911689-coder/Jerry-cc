@@ -1,7 +1,7 @@
 :root {
-  --bg: #f5f0e8; --card: #ffffff; --ink: #3a2a22; --muted: #7d6b5d; --line: #d9c7ad; --soft: #e6dccb;
-  --brand: #8b2a38; --brand-ink: #fff; --accent: #c97b3f; --tan: #b08d62; --ok: #1f7a3a; --bad: #b3261e;
-  --peak-bg: #f8e9d6; --dis: #b3a898; --radius: 0;
+  --bg: #faf6ef; --card: #ffffff; --ink: #3a2a26; --muted: #7a6a62; --line: #d9c9b6; --soft: #ece3d6;
+  --brand: #722f37; --brand-ink: #fff; --accent: #8a4a50; --tan: #b8a58a; --ok: #1f7a3a; --bad: #9b1c2c;
+  --peak-bg: #f5e6e4; --dis: #b3a898; --radius: 0;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.6;
@@ -101,12 +101,12 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--soft
 .topbar img { height: 56px; width: auto; display: block; }
 .topbar a { color: var(--brand); font-weight: 700; text-decoration: none; border: 1.5px solid var(--brand); padding: 8px 12px; font-size: 15px; }
 .topbar .cartbox { font-weight: 800; color: var(--brand); }
-.announce { background: #111; color: #fff; padding: 14px 16px 12px; text-align: center; }
-.announce .go { display: block; width: 100%; max-width: 720px; margin: 0 auto; border: 0; cursor: pointer; background: linear-gradient(#d28a4b, #b86f33);
-  color: #fff; font-weight: 800; font-size: 20px; letter-spacing: 2px; padding: 14px 10px; box-shadow: 0 4px 14px rgba(0,0,0,.45); min-height: 56px; }
+.announce { background: var(--brand); color: #fff; padding: 14px 16px 12px; text-align: center; }
+.announce .go { display: block; width: 100%; max-width: 720px; margin: 0 auto; border: 0; cursor: pointer; background: var(--bg);
+  color: var(--brand); font-weight: 800; font-size: 20px; letter-spacing: 2px; padding: 14px 10px; box-shadow: 4px 4px 0 rgba(0,0,0,.25); min-height: 56px; }
 .announce p { margin: 10px auto 0; font-size: 14px; max-width: 720px; }
 .tiles { display: flex; gap: 10px; margin: 18px 0 6px; }
-.tile { flex: 1; text-align: center; background: linear-gradient(160deg, #9a3041, #6f1f2c); color: #fff; padding: 12px 4px 10px; cursor: pointer; border: 0; text-decoration: none; display: block; min-height: 72px; }
+.tile { flex: 1; text-align: center; background: var(--brand); color: #fff; padding: 12px 4px 10px; cursor: pointer; border: 0; text-decoration: none; display: block; min-height: 72px; }
 .tile small { display: block; font-size: 12px; opacity: .85; letter-spacing: 1px; font-style: italic; }
 .tile b { display: block; font-size: 19px; letter-spacing: 1px; }
 .shop section.card { background: #fff; border: 1px solid var(--soft); box-shadow: 0 2px 8px rgba(120,90,50,.08); }
@@ -117,15 +117,16 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--soft
 .shop .notice { display: none; }
 
 /* v0 redesign: serif headings, photo-led product cards, clearer peak days */
-:root { --serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif; }
+:root { --serif: "Noto Sans TC", -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif; }
 .shop section.card h2, .item h3, .announce .go, .tile b, .picked, .cal-head .title { font-family: var(--serif); }
-.shop section.card h2 { font-weight: 900; font-size: 19px; letter-spacing: 2px; }
+.shop section.card h2 { font-weight: 900; font-size: 19px; letter-spacing: 2px; color: var(--brand); }
+.item-body h3, .announce .go, .tile b, .picked { font-weight: 900; }
 .shop section.card { padding: 20px 16px; margin: 20px 0; }
 .item { display: grid; gap: 14px; }
 .item + .item { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--soft); }
 .item .photo { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; display: block; background: var(--soft); }
 .item.custom .photo { aspect-ratio: 3 / 4; }
-.item-body .eyebrow { margin: 0; font-size: 12px; letter-spacing: 3px; color: var(--accent); font-style: italic; text-transform: uppercase; }
+.item-body .eyebrow { margin: 0; font-size: 12px; letter-spacing: 3px; color: var(--tan); font-style: italic; text-transform: uppercase; }
 .item-body h3 { margin: 2px 0 4px; font-size: 22px; font-weight: 900; letter-spacing: 1px; }
 .item-body .desc { margin: 0 0 8px; color: var(--muted); font-size: 15px; }
 .item-body .price { margin: 0 0 12px; font-size: 28px; font-weight: 800; color: var(--brand); font-family: var(--serif); }

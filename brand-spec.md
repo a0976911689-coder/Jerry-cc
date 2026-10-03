@@ -6,7 +6,7 @@
 - Product photos: **pending** — owner to supply real photos of the 公定版 set (and packaging options). Use an honest "photo needed" placeholder until then; no CSS/SVG fakes.
 
 ## Tokens (current)
-- Colour: wine `#8b2a38` (primary action), copper `#c97b3f` (accent / announcement button), tan `#b08d62` (rules, borders), cream `#f5f0e8` (page), white cards, dark-brown ink `#3a2a22`, announcement band `#111`. Logo keeps its own apple red `#e00715` / orange `#eb6501` and is never recoloured.
+- Colour (2-colour system, owner request): off-white `#faf6ef` + wine red `#722f37` (never bright red). Neutrals: ink `#3a2a26`, rules `#d9c9b6`, tan `#b8a58a`. Logo keeps its own apple red and is never recoloured. Headings: Noto Sans TC 900; body: Noto Sans TC 400/500.
 - Corners: square only (owner request). Borders thin tan; hard 3px offset shadow on title boxes.
 
 ## Reference
