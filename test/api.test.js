@@ -91,3 +91,19 @@ test('sheet/email notification posts a row and survives failures', async () => {
   assert.equal((await pushToSheet(order, async () => { throw new Error('net'); })).ok, false);
   delete process.env.GOOGLE_SCRIPT_URL; delete process.env.GOOGLE_SCRIPT_SECRET;
 });
+
+test('admin login locks after 3 wrong passwords for 15 minutes', async () => {
+  const login = (pw, t) => handle(new Request('http://x/api/admin/login', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': '9.9.9.9' }, body: JSON.stringify({ password: pw }) }), t);
+  const t0 = new Date('2026-10-03T02:00:00Z');
+  assert.equal((await login('bad1', t0)).status, 401);
+  assert.equal((await login('bad2', t0)).status, 401);
+  const third = await login('bad3', t0);
+  assert.equal(third.status, 401);
+  assert.match((await third.json()).error, /鎖定/);
+  const locked = await login('test-pass', t0); // even the right password is refused while locked
+  assert.equal(locked.status, 429);
+  assert.equal((await login('test-pass', new Date(t0.getTime() + 16 * 60000))).status, 200); // lock expired
+  // a different IP is unaffected
+  const other = await handle(new Request('http://x/api/admin/login', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': '8.8.8.8' }, body: JSON.stringify({ password: 'test-pass' }) }), t0);
+  assert.equal(other.status, 200);
+});
