@@ -49,8 +49,27 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - Edit settings: lead time, blocked dates, daily caps, peak-day look-ahead, festival list.
 - Protect with a login; customers must never reach admin routes or others' orders.
 
+## Confirmed business rules (from the owner)
+
+### Products — real fruit (真實果品)
+- **公定版 (standard set): NT$600.** Mainly used for temple festivals (宮廟節慶). Orderable directly on the site.
+- **客製化 (custom): discuss via LINE DM first; priced at a premium.** The site must NOT show a self-serve price or checkout for custom orders. Show a "私訊 LINE 洽詢" button instead. Staff can create a custom order in the admin after agreeing price (price is entered manually per order).
+- The card text / packaging options above apply to the standard set; custom-order details are captured in the admin note.
+
+### Delivery area (可配送區域) — 高雄市 only
+- 永安區, 彌陀區, 岡山區, 梓官區.
+- Address form: city fixed to 高雄市, district is a dropdown limited to these four. Reject anything else server-side and show "不在配送範圍，請私訊 LINE 洽詢".
+- Keep the district list in config so the owner can change it.
+
+### Business hours (營業時間)
+- **Closed every Monday (固定週一公休).**
+- **Exception — open on a Monday if that day is** 農曆初一, 初二, 十五, 十六, or a national holiday (國定假日 / 年假). Tue–Sun are always open.
+- The delivery-date picker must follow this: Mondays are blocked unless an exception applies. The lunar exception is computed from the lunar calendar library; national holidays come from an admin-editable list (Taiwan's holiday calendar changes yearly, so do not hard-code years).
+- Show the owner-facing reason on the day ("週一公休" / "初一，正常營業").
+- Urgent requests outside these rules (急需): the picker shows "急件請私訊 LINE 討論" with a LINE link; the site does not auto-accept blocked dates.
+
 ## Working rules
-- Ask the owner before inventing business rules (prices, delivery areas, fees). Put them in config/data, not hard-coded.
+- Ask the owner before inventing business rules (fees, lead time, daily caps, delivery times). Put them in config/data, not hard-coded.
 - Prices are integers in NT$; no floating-point money.
 - Validate on the server: delivery date within allowed range, required fields, text length. Do not trust the client.
 - Test the date logic: timezone edges, month/year boundaries, leap months, blocked dates, daily caps.
