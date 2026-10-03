@@ -1,7 +1,8 @@
 :root {
-  --bg: #faf6ef; --card: #ffffff; --ink: #3a2a26; --muted: #7a6a62; --line: #d9c9b6; --soft: #ece3d6;
+  --bg: #fef8f2; --card: #ffffff; --ink: #3a2a26; --muted: #7a6a62; --line: #dccbb0; --soft: #f1e8d6;
   --brand: #722f37; --brand-ink: #fff; --accent: #8a4a50; --tan: #b8a58a; --ok: #1f7a3a; --bad: #9b1c2c;
   --peak-bg: #f5e6e4; --dis: #b3a898; --radius: 0;
+  --green: #405430; --green-dark: #33441f; --band: #f6f1e2; --sand: #e8d6ae;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.6;
@@ -150,3 +151,82 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--soft
 .cal-notes p { margin: 4px 0; font-size: 15px; } .cal-notes .k1 { color: var(--brand); }
 .day.static .l, .day.static .n { white-space: nowrap; }
 @media (max-width: 440px) { .day.static .l { font-size: 10px; letter-spacing: -.3px; } .day.static .n { font-size: 10px; letter-spacing: -.5px; } }
+
+/* ---- Canva-based layout: green + cream, wine for headings ---- */
+.btn { background: var(--green); color: #fff; }
+.btn:hover { background: var(--green-dark); }
+.btn.ghost { background: transparent; color: var(--green); border-color: var(--green); }
+.btn.ghost:hover { background: var(--band); }
+a.btn { display: inline-block; text-align: center; text-decoration: none; }
+.day.sel { background: var(--green); border-color: var(--green); }
+.tabs button[aria-selected=true] { background: var(--green); border-color: var(--green); }
+.stepper button { background: var(--band); }
+
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 16px; background: var(--bg); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+.topbar img { height: 48px; width: auto; }
+.topbar nav { display: flex; gap: 2px; }
+.topbar nav button { background: none; border: 0; padding: 10px 8px; font: 700 14px var(--serif); color: var(--green); cursor: pointer; min-height: 44px; }
+.topbar nav button:hover { color: var(--brand); }
+
+.hero2 { background: var(--bg); padding: 28px 16px 8px; max-width: 920px; margin: 0 auto; display: grid; gap: 20px; }
+.hero2 h1 { margin: 0 0 12px; font: 900 clamp(30px, 8vw, 44px)/1.25 var(--serif); color: var(--brand); letter-spacing: 2px; }
+.hero2 p { margin: 0 0 16px; color: var(--ink); font-size: 17px; }
+.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero-cta .btn { width: auto; flex: 1 1 160px; }
+.hero-photo { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; max-height: 520px; border: 1px solid var(--line); }
+@media (min-width: 720px) { .hero2 { grid-template-columns: 1.1fr 1fr; align-items: center; padding-top: 40px; } }
+
+.service, .how { max-width: 920px; margin: 0 auto; padding: 24px 16px 8px; text-align: center; }
+.service h2, .how h2, .shop-info h2 { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; font: 900 22px var(--serif); color: var(--brand); }
+.service h2::before, .service h2::after, .how h2::before, .how h2::after, .shop-info h2::before, .shop-info h2::after { content: ''; flex: 1; height: 2px; background: var(--tan); }
+.service h2 span, .how h2 span, .shop-info h2 span { padding: 0 4px; }
+.price-line { margin: 0 0 14px; font: 900 24px var(--serif); color: var(--green); }
+.cards3 { display: grid; gap: 10px; }
+@media (min-width: 640px) { .cards3 { grid-template-columns: repeat(3, 1fr); } }
+.u-card { background: var(--sand); padding: 16px 14px; text-align: center; display: grid; gap: 6px; border: 1px solid #d9c593; }
+.u-card b { font: 900 20px var(--serif); color: var(--brand); }
+.u-card span { font-size: 15px; color: var(--ink); }
+.how { background: var(--band); max-width: none; margin-top: 24px; padding-bottom: 20px; }
+.how > * { max-width: 888px; margin-left: auto; margin-right: auto; }
+.steps { list-style: none; margin: 14px auto; padding: 0; display: grid; gap: 10px; text-align: left; }
+@media (min-width: 720px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+.steps li { display: flex; gap: 12px; align-items: flex-start; background: #fff; border: 1px solid var(--line); padding: 12px; font-size: 15px; }
+.steps i { flex: none; width: 30px; height: 30px; background: var(--green); color: #fff; font: 900 16px/30px var(--serif); text-align: center; border-radius: 50%; font-style: normal; }
+.noticebar { margin: 8px auto 0; background: #fff; border-left: 5px solid var(--brand); padding: 10px 14px; text-align: left; font-size: 15px; }
+
+.lbl { margin: 12px 0 6px; font-weight: 700; font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { margin: 0; cursor: pointer; }
+.chip input { position: absolute; opacity: 0; }
+.chip span { display: inline-block; padding: 10px 14px; border: 1.5px solid var(--line); background: #fff; font-weight: 700; min-height: 44px; line-height: 24px; }
+.chip input:checked + span { background: var(--green); border-color: var(--green); color: #fff; }
+.chip input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+.callout { margin: 10px 0; padding: 12px; background: var(--peak-bg); border-left: 5px solid var(--brand); }
+.callout p { margin: 0 0 8px; }
+
+.shop-info { max-width: 720px; margin: 24px auto 150px; padding: 0 16px; }
+.shop-info ul { list-style: none; padding: 0; margin: 12px 0 16px; display: grid; gap: 8px; }
+.shop-info li { background: #fff; border: 1px solid var(--line); padding: 10px 12px; font-size: 15px; }
+.wrap { padding-bottom: 8px; }
+.bar { background: var(--bg); border-top: 1px solid var(--line); }
+.bar .sum b { color: var(--brand); }
+.hero-cta .btn { padding: 14px 10px; letter-spacing: 1px; white-space: nowrap; }
+
+/* bigger logo in the top bar (not sticky, so it can be large) */
+.topbar { position: static; padding: 10px 16px; max-width: 920px; margin: 0 auto; background: transparent; border-bottom: 0; }
+.topbar img { height: 104px; width: auto; }
+@media (min-width: 720px) { .topbar img { height: 128px; } .topbar nav button { font-size: 16px; } }
+.hero2 { padding-top: 8px; }
+
+/* tidier, smaller hero text */
+.hero2 h1 { font-size: clamp(24px, 6.4vw, 34px); line-height: 1.35; letter-spacing: 1px; margin-bottom: 10px; text-wrap: balance; }
+.hero2 p { font-size: 16px; line-height: 1.75; text-wrap: balance; }
+.service h2, .how h2, .shop-info h2 { font-size: 20px; }
+p, li, .u-card span, .noticebar { text-wrap: pretty; }
+.u-card span, .noticebar { line-height: 1.7; }
+
+/* hero text: each line stays on one row at any phone width */
+.hero2 h1 { white-space: nowrap; font-size: min(34px, calc((100vw - 32px) / 13)); letter-spacing: 0; }
+.hero2 p.sub { margin: 0 0 16px; font-size: min(17px, calc((100vw - 32px) / 15)); line-height: 1.8; }
+.hero2 p.sub span { display: block; white-space: nowrap; }
+@media (min-width: 720px) { .hero2 h1 { font-size: 34px; } .hero2 p.sub { font-size: 17px; } }

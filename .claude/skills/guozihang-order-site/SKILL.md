@@ -113,3 +113,6 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 ## Order notifications
 - Naming: the standard product is **公訂版** (owner's wording), not 公定版.
 - New orders notify via (1) Google Apps Script web app → Google Sheet row + email (`lib/notify.js`, `docs/google-apps-script.gs`, env `GOOGLE_SCRIPT_URL` / `GOOGLE_SCRIPT_SECRET`) and (2) LINE push when configured. Orders are saved first; notification failures are recorded on the order and shown in admin, never block the order.
+
+## Admin login security
+- Wrong password 3 times from one IP → locked 15 minutes (even the right password is refused while locked); 30 failures across all IPs → global 15-minute lock. Counters live in the data store (`login/ip:*`, `login/global`). Owner should use a 12+ character password.

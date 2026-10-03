@@ -56,7 +56,7 @@ async function viewToday() {
 }
 
 function orderCard(o, reload) {
-  const lines = o.kind === 'custom' ? [`客製化：${o.description || ''}`] : [`公訂版 × ${o.qty}　包裝：${o.packagingName}`];
+  const lines = o.kind === 'custom' ? [`客製化：${o.description || ''}`] : [`${o.purposeName ? '用途：' + o.purposeName + '　' : ''}公訂版 × ${o.qty}　包裝：${o.packagingName}`];
   const patch = async (body) => { await call(`/admin/orders/${o.id}`, { method: 'PATCH', body }); reload(); };
   const sel = h('select', { 'aria-label': '訂單狀態', onchange: (e) => patch({ status: e.target.value }) },
     Object.entries(STATUS).map(([k, v]) => h('option', { value: k, selected: k === o.status }, v)));
@@ -136,9 +136,12 @@ async function viewSettings() {
     txt('storeAddress', '本店地址（自取用）', '', 2), txt('mapUrl', 'Google 地圖連結（https://…）', '', 1), txt('lineUrl', 'LINE 連結（https://…）', '', 1),
   ];
   const pk = h('textarea', { rows: 4 }, s.packagingOptions.map((p) => `${p.name}|${p.fee}`).join('\n'));
+  const pu = h('textarea', { rows: 5 }, s.purposes.map((p) => `${p.name}|${p.contactOnly ? 'LINE' : p.leadDays}`).join('\n'));
   const err = h('p', { class: 'error' }), ok = h('p', { class: 'hint' });
   return h('section', { class: 'card' }, h('h2', {}, '設定'), rows.map((r) => r[2]),
     h('div', {}, h('label', {}, '包裝選項（一行一個：名稱|每份加價）'), pk),
+    h('div', {}, h('label', {}, '禮籃用途（一行一個：名稱|最短提前天數；寫 LINE 代表需先私訊、不能在網站直接下單）'), pu,
+      h('p', { class: 'hint' }, '例：初一、十五|7　神明聖誕|14　宮廟進香|LINE。實際提前天數會取「用途」與「份數」兩者較長的。')),
     err, ok, h('button', { class: 'btn', style: 'margin-top:12px', onclick: async () => {
       const body = {};
       for (const [k, el] of rows) {
@@ -146,6 +149,7 @@ async function viewSettings() {
         body[k] = ['deliveryDistricts', 'blockedDates', 'specialOpenDates'].includes(k) ? v.split('\n').map((x) => x.trim()).filter(Boolean)
           : el.type === 'number' ? Number(v) : v;
       }
+      body.purposes = pu.value.split('\n').map((l, i) => { const [name, v] = l.split('|'); const contactOnly = /^line$/i.test((v || '').trim()); return { id: s.purposes[i]?.id || `u${Date.now()}${i}`, name: (name || '').trim(), contactOnly, leadDays: contactOnly ? 0 : Number(v || 0) }; }).filter((p) => p.name);
       body.packagingOptions = pk.value.split('\n').map((l, i) => { const [name, fee] = l.split('|'); return { id: s.packagingOptions[i]?.id || `p${Date.now()}${i}`, name: (name || '').trim(), fee: Number(fee || 0) }; }).filter((p) => p.name);
       err.textContent = ''; ok.textContent = '';
       try { await call('/admin/settings', { method: 'PUT', body }); ok.textContent = '已儲存'; } catch (e) { err.textContent = e.message; }
