@@ -56,20 +56,32 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - **客製化 (custom): discuss via LINE DM first; priced at a premium.** The site must NOT show a self-serve price or checkout for custom orders. Show a "私訊 LINE 洽詢" button instead. Staff can create a custom order in the admin after agreeing price (price is entered manually per order).
 - The card text / packaging options above apply to the standard set; custom-order details are captured in the admin note.
 
-### Delivery area (可配送區域) — 高雄市 only
-- 永安區, 彌陀區, 岡山區, 梓官區.
-- Address form: city fixed to 高雄市, district is a dropdown limited to these four. Reject anything else server-side and show "不在配送範圍，請私訊 LINE 洽詢".
-- Keep the district list in config so the owner can change it.
+### Delivery vs. pickup (配送與自取)
+- Two fulfilment methods: **配送 (delivery)** and **本店自取 (store pickup)**.
+- Delivery is offered only in 高雄市 永安區, 彌陀區, 岡山區, 梓官區. Everywhere else is **store pickup only**.
+- Order form: customer picks 配送 or 自取 first. For 配送, the district is a dropdown limited to the four districts above; any other address is rejected server-side with "不在配送範圍，請改為本店自取或私訊 LINE 洽詢".
+- Keep the district list and store address in config so the owner can change them (store address still to be provided).
+
+### Shipping fee (運費)
+- 本店自取: **NT$0**.
+- 配送 (the four districts above): **NT$50 shipping fee**.
+- Fee is added server-side to the order total and shown on the summary and in the LINE push. Fee amount lives in config.
+- Custom (客製化) orders: staff enter the final price/fee manually in the admin.
 
 ### Business hours (營業時間)
+- **Opening hours end at 12:00 noon (中午 12:00 打烊).** After 12:00 Taipei time, same-day orders/pickups are closed. Opening time is not yet set (ask the owner); keep it in config.
 - **Closed every Monday (固定週一公休).**
 - **Exception — open on a Monday if that day is** 農曆初一, 初二, 十五, 十六, or a national holiday (國定假日 / 年假). Tue–Sun are always open.
 - The delivery-date picker must follow this: Mondays are blocked unless an exception applies. The lunar exception is computed from the lunar calendar library; national holidays come from an admin-editable list (Taiwan's holiday calendar changes yearly, so do not hard-code years).
 - Show the owner-facing reason on the day ("週一公休" / "初一，正常營業").
 - Urgent requests outside these rules (急需): the picker shows "急件請私訊 LINE 討論" with a LINE link; the site does not auto-accept blocked dates.
 
+### Order limits (接單與預訂)
+- **Daily order cap: NT$500,000 per delivery date**, measured by total order amount (not order count). Past record is about NT$200,000/day. Block a date (and show "該日已額滿，請私訊 LINE") when accepting an order would push that date over the cap. Cap lives in config; check it server-side in a transaction-safe way.
+- **Advance booking: up to 7 days ahead.** The delivery-date picker only offers dates from today through today+7 (Taipei time), minus blocked days. Minimum lead time (e.g. same-day) is not yet decided: ask the owner; default to config value, and apply the 12:00 noon cut-off to same-day.
+
 ## Working rules
-- Ask the owner before inventing business rules (fees, lead time, daily caps, delivery times). Put them in config/data, not hard-coded.
+- Ask the owner before inventing business rules (minimum lead time, opening time, delivery time slots, store address). Put them in config/data, not hard-coded.
 - Prices are integers in NT$; no floating-point money.
 - Validate on the server: delivery date within allowed range, required fields, text length. Do not trust the client.
 - Test the date logic: timezone edges, month/year boundaries, leap months, blocked dates, daily caps.
