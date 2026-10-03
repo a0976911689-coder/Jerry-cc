@@ -217,3 +217,10 @@ a.btn { display: inline-block; text-align: center; text-decoration: none; }
 .topbar img { height: 104px; width: auto; }
 @media (min-width: 720px) { .topbar img { height: 128px; } .topbar nav button { font-size: 16px; } }
 .hero2 { padding-top: 8px; }
+
+/* tidier, smaller hero text */
+.hero2 h1 { font-size: clamp(24px, 6.4vw, 34px); line-height: 1.35; letter-spacing: 1px; margin-bottom: 10px; text-wrap: balance; }
+.hero2 p { font-size: 16px; line-height: 1.75; text-wrap: balance; }
+.service h2, .how h2, .shop-info h2 { font-size: 20px; }
+p, li, .u-card span, .noticebar { text-wrap: pretty; }
+.u-card span, .noticebar { line-height: 1.7; }
