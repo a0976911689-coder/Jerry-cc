@@ -1,0 +1,14 @@
+{
+  "name": "guozihang-order-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node dev-server.mjs",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0",
+    "lunar-javascript": "^1.7.0"
+  }
+}

@@ -69,7 +69,7 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - Custom (客製化) orders: staff enter the final price/fee manually in the admin.
 
 ### Business hours (營業時間)
-- **Opening hours end at 12:00 noon (中午 12:00 打烊).** After 12:00 Taipei time, same-day orders/pickups are closed. Opening time is not yet set (ask the owner); keep it in config.
+- **Opening hours end at 12:00 noon (中午 12:00 打烊).** After 12:00 Taipei time, same-day orders/pickups are closed. Opens at 06:00. Hours live in config.
 - **Closed every Monday (固定週一公休).**
 - **Exception — open on a Monday if that day is** 農曆初一, 初二, 十五, 十六, or a national holiday (國定假日 / 年假). Tue–Sun are always open.
 - The delivery-date picker must follow this: Mondays are blocked unless an exception applies. The lunar exception is computed from the lunar calendar library; national holidays come from an admin-editable list (Taiwan's holiday calendar changes yearly, so do not hard-code years).
@@ -78,11 +78,19 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 
 ### Order limits (接單與預訂)
 - **Daily order cap: NT$500,000 per delivery date**, measured by total order amount (not order count). Past record is about NT$200,000/day. Block a date (and show "該日已額滿，請私訊 LINE") when accepting an order would push that date over the cap. Cap lives in config; check it server-side in a transaction-safe way.
-- **Advance booking: up to 7 days ahead.** The delivery-date picker only offers dates from today through today+7 (Taipei time), minus blocked days. Minimum lead time (e.g. same-day) is not yet decided: ask the owner; default to config value, and apply the 12:00 noon cut-off to same-day.
+- **Minimum lead time (confirmed): no same-day orders. Small orders need ≥ 3 days ahead; large orders need ≥ 7 days ahead.** There are no delivery time slots.
+- "Large" threshold is **not confirmed by the owner**: implemented as `largeOrderQty` (default 10 standard sets) in settings, editable in the admin. Confirm with the owner.
+- Maximum advance booking is also **unconfirmed** (owner earlier said "up to a week ahead", which conflicts with the 7-day minimum for large orders): implemented as `maxAdvanceDays` (default 90), editable in the admin.
 
 ## Working rules
-- Ask the owner before inventing business rules (minimum lead time, opening time, delivery time slots, store address). Put them in config/data, not hard-coded.
+- Ask the owner before inventing business rules (large-order threshold, max advance booking, store address, packaging options and fees). Put them in config/data, not hard-coded.
 - Prices are integers in NT$; no floating-point money.
 - Validate on the server: delivery date within allowed range, required fields, text length. Do not trust the client.
 - Test the date logic: timezone edges, month/year boundaries, leap months, blocked dates, daily caps.
 - Hosting target: Netlify (static front end + serverless functions). Ask before adding paid services.
+
+## Code layout (implemented)
+- `lib/rules.js` — date/open/lead-time/cap rules (single source of truth; the browser only displays what `/api/public` returns). `lib/dates.js` — Taipei-time + lunar helpers. `lib/api.js` — API routes. `lib/line.js` — LINE push. `lib/store.js` — Netlify Blobs in production, JSON files locally.
+- `public/` — order page (`index.html`, `app.js`) and admin (`admin.html`, `admin.js`). `netlify/functions/api.mjs` serves `/api/*`.
+- Tests: `npm test`. Local run: `ADMIN_PASSWORD=... npm run dev`.
+- Env vars: `ADMIN_PASSWORD`, `ADMIN_SECRET` (optional), `LINE_CHANNEL_ACCESS_TOKEN`, `LINE_TARGET_ID`, `LINE_URL`.
