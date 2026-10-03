@@ -1,8 +1,10 @@
 import { h, money, api } from './common.js';
+import { drawPoster, downloadCanvas, summaryLines } from './poster.js';
 
 const state = { qty: 1, packagingId: '', cardText: '', method: 'pickup', district: '', address: '', date: '',
   name: '', phone: '', note: '', month: '', submitting: false, error: '' };
 let data;
+let cal = null; // { month, days } for the 營業日程 section
 
 const app = document.getElementById('app');
 // scroll helper (no scrollIntoView: it misbehaves inside embedded in-app browsers/iframes)
@@ -65,6 +67,36 @@ function calendar() {
     h('p', { class: 'hint' }, `小量訂購需提前 ${data.settings.minLeadDaysSmall} 天；${data.settings.largeOrderQty} 份以上需提前 ${data.settings.minLeadDaysLarge} 天；不可當天訂、當天送。`));
 }
 
+async function loadCal(month) {
+  try { cal = await api(`/calendar${month ? `?month=${month}` : ''}`); } catch { /* keep old */ }
+  render();
+}
+const shiftMonth = (month, n) => { const [y, m] = month.split('-').map(Number); const d = new Date(Date.UTC(y, m - 1 + n, 1)); return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`; };
+
+function businessCalendar() {
+  if (!cal) return h('p', { class: 'hint' }, '載入中…');
+  const [y, m] = cal.month.split('-').map(Number);
+  const curMonth = data.today.slice(0, 7);
+  const first = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+  const cells = Array.from({ length: first }, () => h('div', { class: 'day empty' }));
+  for (const d of cal.days) {
+    const note = !d.open ? '公休' : d.weekday === '一' ? '正常營業' : d.tag;
+    cells.push(h('div', { class: `day static${d.tag ? ' peak' : ''}${!d.open ? ' off' : ''}${d.date === cal.today ? ' today' : ''}`,
+      'aria-label': `${m}月${Number(d.date.slice(8))}日 週${d.weekday} 農曆${d.lunarMonth}${d.lunarDay}${note ? ' ' + note : ''}` },
+      h('span', { class: 's' }, Number(d.date.slice(8))), h('span', { class: 'l' }, d.lunar), note && h('span', { class: 'n' }, note)));
+  }
+  const canvas = h('canvas', { hidden: true });
+  return h('div', {},
+    h('div', { class: 'cal-head' },
+      h('button', { type: 'button', 'aria-label': '上個月', disabled: cal.month <= curMonth, onclick: () => loadCal(shiftMonth(cal.month, -1)) }, '‹'),
+      h('span', { class: 'title' }, `${y} 年 ${m} 月`),
+      h('button', { type: 'button', 'aria-label': '下個月', disabled: cal.month >= shiftMonth(curMonth, 3), onclick: () => loadCal(shiftMonth(cal.month, 1)) }, '›')),
+    h('div', { class: 'grid' }, ['日', '一', '二', '三', '四', '五', '六'].map((w) => h('div', { class: 'dow' }, w)), cells),
+    h('div', { class: 'cal-notes' }, summaryLines(cal.days).map(([t, col], i) => h('p', { class: i === 0 ? 'k0' : 'k1' }, t))),
+    h('button', { type: 'button', class: 'btn small ghost', style: 'margin-top:10px', onclick: async () => { await drawPoster(canvas, cal.days); downloadCanvas(canvas, `英仔果子行-${cal.month}-營業日程.png`); } }, '下載本月日程圖'),
+    canvas);
+}
+
 function field(label, input, hint) { return h('div', {}, h('label', {}, label), input, hint && h('p', { class: 'hint' }, hint)); }
 
 async function submit() {
@@ -123,6 +155,8 @@ function render() {
       s.lineUrl ? h('a', { class: 'tile', href: s.lineUrl }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢'))
         : h('button', { class: 'tile', type: 'button', onclick: () => goTo('sec-item') }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢')),
       h('button', { class: 'tile', type: 'button', onclick: () => { state.method = 'pickup'; render(); goTo('sec-way'); } }, h('small', {}, 'store pickup'), h('b', {}, '門市自取'))),
+
+    h('section', { class: 'card', id: 'sec-cal' }, h('h2', {}, h('span', {}, '營業日程')), businessCalendar()),
 
     h('section', { class: 'card', id: 'sec-item' }, h('h2', {}, h('span', {}, '1. 選擇品項')),
       h('article', { class: 'item' },
@@ -192,6 +226,8 @@ function update() { const v = money(totals().total); for (const id of ['tot', 't
 try {
   data = await api('/public');
   state.packagingId = data.settings.packagingOptions[0].id;
+  data.today = data.today || data.days[0].date;
+  loadCal();
   render();
 } catch (e) {
   app.replaceChildren(h('p', { class: 'error' }, '載入失敗，請重新整理：' + e.message));

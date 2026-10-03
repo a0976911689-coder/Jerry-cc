@@ -139,3 +139,14 @@ th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--soft
 .announce .go { font-weight: 900; }
 @media (prefers-reduced-motion: no-preference) { .day, .tile, .btn { transition: transform .12s ease, background-color .12s ease; } .tile:hover, .btn:hover { transform: translateY(-1px); } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* public 營業日程 calendar (read-only) */
+.day.static { cursor: default; min-height: 64px; }
+.day.static .n { font-size: 11px; font-weight: 700; color: var(--brand); }
+.day.static.off { background: var(--soft); color: var(--muted); border-style: solid; }
+.day.static.off .n, .day.static.off .l { color: var(--muted); }
+.day.static.today { outline: 2px solid var(--brand); outline-offset: -2px; }
+.cal-notes { margin-top: 12px; text-align: center; font-family: var(--serif); font-weight: 900; }
+.cal-notes p { margin: 4px 0; font-size: 15px; } .cal-notes .k1 { color: var(--brand); }
+.day.static .l, .day.static .n { white-space: nowrap; }
+@media (max-width: 440px) { .day.static .l { font-size: 10px; letter-spacing: -.3px; } .day.static .n { font-size: 10px; letter-spacing: -.5px; } }

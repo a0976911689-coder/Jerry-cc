@@ -9,6 +9,19 @@ function loadImg(src) {
 const daysOf = (days, pred) => days.filter(pred).map((d) => Number(d.date.slice(8)));
 const list = (a) => a.join('、');
 
+/** Footer text lines [text, colour] shared by the poster and the website calendar. */
+export function summaryLines(days) {
+  const out = [];
+  const closed = daysOf(days, (d) => !d.open);
+  const reopened = days.filter((d) => d.open && d.weekday === '一');
+  const jing = daysOf(days, (d) => d.tag === '敬果日');
+  const bai = daysOf(days, (d) => d.tag === '公司拜拜');
+  if (closed.length || reopened.length) out.push([`公休：${list(closed)}日${reopened.length ? `｜${list(reopened.map((d) => Number(d.date.slice(8))))}日正常營業` : ''}`, INK]);
+  if (jing.length) out.push([`敬果日：${list(jing)}日，記得準備拜拜水果`, WINE]);
+  if (bai.length) out.push([`公司拜拜：${list(bai)}日，記得準備拜拜水果`, WINE]);
+  return out;
+}
+
 export async function drawPoster(canvas, days) {
   canvas.width = W; canvas.height = H;
   const c = canvas.getContext('2d');
@@ -34,14 +47,7 @@ export async function drawPoster(canvas, days) {
   const gx = 40, gw = W - 80, cw = gw / 7, gy = 380, hh = 64;
   const first = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
   const rows = Math.ceil((first + days.length) / 7);
-  const footerLines = [];
-  const closed = daysOf(days, (d) => !d.open);
-  const reopened = days.filter((d) => d.open && d.weekday === '一');
-  const jing = daysOf(days, (d) => d.tag === '敬果日');
-  const bai = daysOf(days, (d) => d.tag === '公司拜拜');
-  if (closed.length || reopened.length) footerLines.push([`公休：${list(closed)}日${reopened.length ? `｜${list(reopened.map((d) => Number(d.date.slice(8))))}日正常營業` : ''}`, INK]);
-  if (jing.length) footerLines.push([`敬果日：${list(jing)}日，記得準備拜拜水果`, WINE]);
-  if (bai.length) footerLines.push([`公司拜拜：${list(bai)}日，記得準備拜拜水果`, WINE]);
+  const footerLines = summaryLines(days);
   const footH = footerLines.length * 56 + 20;
   const ch = Math.min(130, (H - gy - hh - footH - 40) / rows);
   const gh = hh + ch * rows;
