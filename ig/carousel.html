@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<title>小英水果小教室 輪播範本</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#6B1F2A;--cream:#FAF5EC;--gold:#C9A96E;--ink:#2B2B2B}
+*{box-sizing:border-box;margin:0}
+body{background:#ddd;font-family:'Noto Sans TC','WenQuanYi Zen Hei',sans-serif;display:flex;flex-wrap:wrap;gap:24px;padding:24px}
+.slide{width:1080px;height:1350px;position:relative;overflow:hidden;padding:90px;display:flex;flex-direction:column;justify-content:space-between;color:var(--cream);background:var(--wine)}
+.slide.light{background:var(--cream);color:var(--ink)}
+.frame{position:absolute;inset:36px;border:2px solid var(--gold);pointer-events:none}
+.serif{font-family:'Noto Serif TC','WenQuanYi Zen Hei',serif}
+.brand{font-size:30px;letter-spacing:.18em;color:var(--gold)}
+.page{font-size:28px;letter-spacing:.2em;color:var(--gold)}
+.rule{width:120px;height:3px;background:var(--gold);margin:36px 0}
+h1{font-size:128px;line-height:1.2;font-weight:900}
+h2{font-size:96px;line-height:1.25;font-weight:700}
+.sub{font-size:44px;line-height:1.7;letter-spacing:.08em}
+.photo{flex:1;margin:40px 0;border:2px dashed var(--gold);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--gold);background-size:cover;background-position:center}
+.photo.has{border:none}
+.tags{display:flex;gap:20px;flex-wrap:wrap;font-size:38px}
+.tags span{border:2px solid var(--gold);padding:10px 28px;color:var(--gold)}
+.light .tags span{color:var(--wine);border-color:var(--wine)}
+.price{font-size:64px;font-weight:700;color:var(--gold)}
+.light .price{color:var(--wine)}
+.cta{font-size:56px;line-height:1.6}
+.qr{width:300px;height:300px;border:2px dashed var(--gold);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:30px;margin-top:30px}
+</style></head><body>
+<script>
+// ===== 每週只需改這裡 =====
+const CFG = {
+  title: ['這週最甜的', '3 種水果'],
+  tagline: '小英親自挑',
+  fruits: [
+    {name:'水果一', origin:'產地', taste:'甜度高、汁多', fit:'全家分食', price:'NT$ ○○／斤', img:''},
+    {name:'水果二', origin:'產地', taste:'口感脆、不酸', fit:'送禮、探病', price:'NT$ ○○／斤', img:''},
+    {name:'水果三', origin:'產地', taste:'本週限量', fit:'拜拜供品', price:'NT$ ○○／斤', img:''}
+  ],
+  tip: ['挑選小撇步','看蒂頭是否新鮮','聞有無自然果香','輕按果身不過軟'],
+  cta: ['想預訂？','點主頁連結加 LINE','初一、十五前請提早預訂']
+};
+// ==========================
+const total = 6, pg = n => `<div class="page">${n} / ${total}</div>`;
+const hdr = n => `<div style="display:flex;justify-content:space-between"><div class="brand serif">小英水果小教室</div>${pg(n)}</div>`;
+const photo = f => `<div class="photo ${f.img?'has':''}" style="${f.img?`background-image:url(${f.img})`:''}">${f.img?'':'放照片'}</div>`;
+const slides = [];
+slides.push(`<div class="slide"><div class="frame"></div>${hdr(1)}
+ <div><h1 class="serif">${CFG.title[0]}<br>${CFG.title[1]}</h1><div class="rule"></div><div class="sub">${CFG.tagline}</div></div>
+ <div class="brand serif">英仔水果 ・ 北高雄</div></div>`);
+CFG.fruits.forEach((f,i)=>slides.push(`<div class="slide light"><div class="frame"></div>${hdr(i+2)}
+ ${photo(f)}
+ <div><h2 class="serif">${f.name}</h2><div class="sub">${f.origin}｜${f.taste}</div>
+ <div class="tags" style="margin:24px 0"><span>適合：${f.fit}</span></div><div class="price">${f.price}</div></div></div>`));
+slides.push(`<div class="slide"><div class="frame"></div>${hdr(5)}
+ <div><h2 class="serif">${CFG.tip[0]}</h2><div class="rule"></div>
+ <div class="sub">① ${CFG.tip[1]}<br>② ${CFG.tip[2]}<br>③ ${CFG.tip[3]}</div></div><div></div></div>`);
+slides.push(`<div class="slide"><div class="frame"></div>${hdr(6)}
+ <div><h2 class="serif">${CFG.cta[0]}</h2><div class="rule"></div>
+ <div class="cta">${CFG.cta[1]}<br>${CFG.cta[2]}</div><div class="qr">放 LINE QR</div></div>
+ <div class="brand serif">英仔水果 ・ 嚴選當季鮮果</div></div>`);
+document.body.insertAdjacentHTML('beforeend', slides.join(''));
+</script></body></html>
