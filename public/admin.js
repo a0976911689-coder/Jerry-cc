@@ -19,7 +19,7 @@ function renderLogin(msg = '') {
     catch (e) { renderLogin(e.message); }
   };
   pw.addEventListener('keydown', (e) => e.key === 'Enter' && go());
-  app.replaceChildren(h('header', { class: 'hero' }, h('h1', {}, '果子行 後台')),
+  app.replaceChildren(h('header', { class: 'hero' }, h('h1', {}, '英仔果子行 後台')),
     h('section', { class: 'card' }, h('label', {}, '管理密碼'), pw, msg && h('p', { class: 'error' }, msg),
       h('button', { class: 'btn', style: 'margin-top:12px', onclick: go }, '登入')));
   pw.focus();
@@ -136,7 +136,7 @@ async function start() {
   if (!token) return renderLogin();
   try {
     const view = tab === 'today' ? await viewToday() : tab === 'orders' ? await viewOrders() : tab === 'new' ? viewNew() : await viewSettings();
-    app.replaceChildren(h('header', { class: 'hero' }, h('h1', {}, '果子行 後台')), tabs(), view);
+    app.replaceChildren(h('header', { class: 'hero' }, h('h1', {}, '英仔果子行 後台')), tabs(), view);
   } catch (e) { if (e.status !== 401) app.replaceChildren(h('p', { class: 'error' }, e.message)); }
 }
 start();

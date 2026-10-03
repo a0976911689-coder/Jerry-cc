@@ -94,3 +94,8 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - `public/` — order page (`index.html`, `app.js`) and admin (`admin.html`, `admin.js`). `netlify/functions/api.mjs` serves `/api/*`.
 - Tests: `npm test`. Local run: `ADMIN_PASSWORD=... npm run dev`.
 - Env vars: `ADMIN_PASSWORD`, `ADMIN_SECRET` (optional), `LINE_CHANNEL_ACCESS_TOKEN`, `LINE_TARGET_ID`, `LINE_URL`.
+
+## Brand & visual style
+- Shop name: **英仔果子行 (A Ying Fruit)**. Logo: `public/logo.png` (red apple, black brush lettering, orange "A Ying Fruit"); LINE QR: `public/line-qr.png`.
+- Palette from the logo: apple red `#e00715`, black `#111`, orange `#eb6501`, white background. **Square corners only — no rounded cards, pills or circles.** Thick black borders, left red bar on section titles.
+- Owner wants the look, colours and layout to follow the 六月初一 gift-box shop. We could not access their site; ask the owner for screenshots before changing layout further. Never copy their logo, photos or copy.

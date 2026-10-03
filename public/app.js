@@ -108,7 +108,7 @@ function render() {
 
   const delivery = state.method === 'delivery';
   app.replaceChildren(
-    h('header', { class: 'hero' }, h('h1', {}, '果子行'), h('p', {}, `線上訂購　營業時間 ${s.openTime}–${s.closeTime}`)),
+    h('header', { class: 'hero' }, h('img', { src: '/logo.png', alt: '英仔果子行 A Ying Fruit' }), h('h1', { class: 'sr' }, '英仔果子行 A Ying Fruit'), h('p', {}, `線上訂購　營業時間 ${s.openTime}–${s.closeTime}`)),
     h('div', { class: 'notice' }, '固定週一公休；遇農曆初一、初二、十五、十六及國定假日照常營業。付款方式：現金。'),
 
     h('section', { class: 'card' }, h('h2', {}, '1. 選擇品項'),
@@ -124,7 +124,8 @@ function render() {
       h('hr'),
       h('div', { class: 'product' },
         h('div', {}, h('div', { class: 'name' }, '客製化'), h('div', { class: 'desc' }, '品項與價格需私訊討論（有溢價）')),
-        s.lineUrl ? h('a', { class: 'btn small ghost', href: s.lineUrl, style: 'text-decoration:none' }, '私訊 LINE 洽詢') : h('span', { class: 'hint' }, '請私訊 LINE 洽詢'))),
+        s.lineUrl ? h('a', { class: 'btn small ghost', href: s.lineUrl, style: 'text-decoration:none' }, '私訊 LINE 洽詢') : h('span', { class: 'hint' }, '請掃描下方 QR Code 加 LINE 洽詢')),
+      !s.lineUrl && h('img', { class: 'qr', src: '/line-qr.png', alt: '英仔果子行 LINE QR Code' })),
 
     h('section', { class: 'card' }, h('h2', {}, '2. 包裝與卡片'),
       field('包裝', h('select', { 'data-f': 'pack', onchange: (e) => { state.packagingId = e.target.value; render(); } },
