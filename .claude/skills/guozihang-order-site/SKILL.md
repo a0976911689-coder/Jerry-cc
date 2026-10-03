@@ -79,7 +79,7 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 ### Order limits (接單與預訂)
 - **Daily order cap: NT$500,000 per delivery date**, measured by total order amount (not order count). Past record is about NT$200,000/day. Block a date (and show "該日已額滿，請私訊 LINE") when accepting an order would push that date over the cap. Cap lives in config; check it server-side in a transaction-safe way.
 - **Minimum lead time (confirmed): no same-day orders. Small orders need ≥ 3 days ahead; large orders need ≥ 7 days ahead.** There are no delivery time slots.
-- "Large" threshold is **not confirmed by the owner**: implemented as `largeOrderQty` (default 10 standard sets) in settings, editable in the admin. Confirm with the owner.
+- **Large order = 10 standard sets or more (confirmed by owner)**: `largeOrderQty` = 10 in settings, editable in the admin.
 - Maximum advance booking is also **unconfirmed** (owner earlier said "up to a week ahead", which conflicts with the 7-day minimum for large orders): implemented as `maxAdvanceDays` (default 90), editable in the admin.
 
 ## Working rules
