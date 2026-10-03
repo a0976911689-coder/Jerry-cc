@@ -132,7 +132,7 @@ async function viewSettings() {
     txt('deliveryDistricts', '配送區域（一行一個）', '', 4),
     txt('blockedDates', '額外休息日（一行一個：日期 備註）', '這些日子客人無法選取。例：2026-12-25 店休。週一公休已自動處理。'),
     txt('specialOpenDates', '特別營業日（一行一個：日期 備註）', '落在週一也會營業。例：2026-10-26 正常營業。國定假日、拜拜隔天等每月請對照營業日程更新。', 5),
-    txt('storeAddress', '本店地址（自取用）', '', 2), txt('lineUrl', 'LINE 連結（https://…）', '', 1),
+    txt('storeAddress', '本店地址（自取用）', '', 2), txt('mapUrl', 'Google 地圖連結（https://…）', '', 1), txt('lineUrl', 'LINE 連結（https://…）', '', 1),
   ];
   const pk = h('textarea', { rows: 4 }, s.packagingOptions.map((p) => `${p.name}|${p.fee}`).join('\n'));
   const err = h('p', { class: 'error' }), ok = h('p', { class: 'hint' });
