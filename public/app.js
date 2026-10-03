@@ -199,7 +199,8 @@ function render() {
             field('區域', h('select', { 'data-f': 'district', onchange: (e) => { state.district = e.target.value; } },
               h('option', { value: '' }, '請選擇'), s.deliveryDistricts.map((d) => h('option', { value: d, selected: d === state.district }, d)))),
             field('詳細地址', text('address', { placeholder: '路名、號、樓', autocomplete: 'street-address' }))))
-        : h('p', { class: 'hint' }, s.storeAddress ? `取貨地點：${s.storeAddress}` : '取貨地點請以店家通知為準。'),
+        : h('div', {}, h('p', { class: 'hint' }, s.storeAddress ? `取貨地點：${s.storeAddress}` : '本店自取，地點請見地圖。'),
+          s.mapUrl && h('a', { class: 'btn small ghost', href: s.mapUrl, target: '_blank', rel: 'noopener', style: 'text-decoration:none;display:inline-block;margin-top:6px' }, '在 Google 地圖查看店面位置')),
       ),
 
     h('section', { class: 'card', id: 'sec-date' }, h('h2', {}, h('span', {}, '4. 送達（取貨）日期')), calendar()),
