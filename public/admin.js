@@ -40,11 +40,11 @@ async function viewToday() {
   const p = ov.prep;
   const dateInput = h('input', { type: 'date', value: date, 'aria-label': '選擇日期', onchange: (e) => { date = e.target.value; start(); } });
   return h('div', {},
-    h('section', { class: 'card' }, h('h2', {}, '即將到來的大月／節日'),
+    h('section', { class: 'card' }, h('h2', {}, '即將到來的敬果日・公司拜拜'),
       ov.upcomingPeaks.length ? ov.upcomingPeaks.map((d) => h('div', { class: 'order' },
-        h('div', { class: 'top' }, h('span', {}, `${dateLabel(d)}${d.holiday ? '・國定假日' : ''}`), h('span', { class: 'tag' }, d.daysAway === 0 ? '今天' : `${d.daysAway} 天後`)),
+        h('div', { class: 'top' }, h('span', {}, `${dateLabel(d)}${d.tag ? '・' + d.tag : ''}`), h('span', { class: 'tag' }, d.daysAway === 0 ? '今天' : `${d.daysAway} 天後`)),
         h('div', {}, `目前 ${d.orders} 筆訂單、${d.qty} 份、${money(d.total)}　`, d.reason && h('span', { class: 'hint' }, d.reason))))
-        : h('p', { class: 'hint' }, '未來幾天沒有大月或國定假日。')),
+        : h('p', { class: 'hint' }, '未來幾天沒有敬果日或公司拜拜。')),
     h('section', { class: 'card' }, h('h2', {}, '備貨總表'), dateInput,
       h('p', { class: 'hint' }, `${dateLabel(ov.dayStatus)}　${ov.dayStatus.open ? '營業' : '公休'}${ov.dayStatus.reason ? '：' + ov.dayStatus.reason : ''}`),
       h('div', { class: 'stat' }, h('div', {}, h('b', {}, p.orders), '訂單'), h('div', {}, h('b', {}, p.qty), '公定版份數'),
@@ -60,7 +60,7 @@ function orderCard(o, reload) {
     Object.entries(STATUS).map(([k, v]) => h('option', { value: k, selected: k === o.status }, v)));
   return h('div', { class: 'order' },
     h('div', { class: 'top' }, h('span', {}, `${o.id}　${o.customer.name}　${o.customer.phone}`), h('span', { class: `tag ${o.paid ? 'ok' : 'bad'}` }, o.paid ? '已收現金' : '待收現金')),
-    h('div', {}, `${o.date}（週${o.dateInfo.weekday}）農曆${o.dateInfo.lunarMonth}${o.dateInfo.lunarDay}${o.dateInfo.peak ? '・大月' : ''}　`,
+    h('div', {}, `${o.date}（週${o.dateInfo.weekday}）農曆${o.dateInfo.lunarMonth}${o.dateInfo.lunarDay}${o.dateInfo.tag ? '・' + o.dateInfo.tag : ''}　`,
       o.method === 'delivery' ? `配送：${o.customer.district}${o.customer.address}` : '自取'),
     lines.map((l) => h('div', {}, l)),
     o.cardText && h('pre', {}, `卡片：${o.cardText}`),
@@ -109,10 +109,10 @@ async function viewSettings() {
     num('standardPrice', '公定版價格 (NT$)'), num('shippingFee', '配送運費 (NT$)'),
     num('minLeadDaysSmall', '小量訂購：最短提前天數'), num('minLeadDaysLarge', '大量訂購：最短提前天數'),
     num('largeOrderQty', '大量訂購門檻（份數）'), num('maxAdvanceDays', '最多可提前預訂天數'),
-    num('dailyCapAmount', '每日接單金額上限 (NT$)'), num('peakLookaheadDays', '大月提醒：提前幾天顯示'), num('cardTextMaxLength', '卡片文字字數上限'),
+    num('dailyCapAmount', '每日接單金額上限 (NT$)'), num('peakLookaheadDays', '拜拜備貨提醒：提前幾天顯示'), num('cardTextMaxLength', '卡片文字字數上限'),
     txt('deliveryDistricts', '配送區域（一行一個）', '', 4),
-    txt('blockedDates', '休息日（一行一個，格式 2026-12-25）', '這些日子客人無法選取'),
-    txt('nationalHolidays', '國定假日／年假（一行一個）', '落在週一時會照常營業。每年請更新。', 5),
+    txt('blockedDates', '額外休息日（一行一個：日期 備註）', '這些日子客人無法選取。例：2026-12-25 店休。週一公休已自動處理。'),
+    txt('specialOpenDates', '特別營業日（一行一個：日期 備註）', '落在週一也會營業。例：2026-10-26 正常營業。國定假日、拜拜隔天等每月請對照營業日程更新。', 5),
     txt('storeAddress', '本店地址（自取用）', '', 2), txt('lineUrl', 'LINE 連結（https://…）', '', 1),
   ];
   const pk = h('textarea', { rows: 4 }, s.packagingOptions.map((p) => `${p.name}|${p.fee}`).join('\n'));
@@ -123,7 +123,7 @@ async function viewSettings() {
       const body = {};
       for (const [k, el] of rows) {
         const v = el.value;
-        body[k] = ['deliveryDistricts', 'blockedDates', 'nationalHolidays'].includes(k) ? v.split('\n').map((x) => x.trim()).filter(Boolean)
+        body[k] = ['deliveryDistricts', 'blockedDates', 'specialOpenDates'].includes(k) ? v.split('\n').map((x) => x.trim()).filter(Boolean)
           : el.type === 'number' ? Number(v) : v;
       }
       body.packagingOptions = pk.value.split('\n').map((l, i) => { const [name, fee] = l.split('|'); return { id: s.packagingOptions[i]?.id || `p${Date.now()}${i}`, name: (name || '').trim(), fee: Number(fee || 0) }; }).filter((p) => p.name);

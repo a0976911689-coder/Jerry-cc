@@ -46,7 +46,7 @@ function calendar() {
     const reason = dayReason(d);
     cells.push(h('button', {
       type: 'button', class: `day${d.peak ? ' peak' : ''}${state.date === date ? ' sel' : ''}`, disabled: !ok,
-      'aria-label': `${m}月${i}日 週${d.weekday} 農曆${d.lunarMonth}${d.lunarDay}${d.peak ? ' 大月' : ''}${ok ? '' : ' 不可選：' + reason}`,
+      'aria-label': `${m}月${i}日 週${d.weekday} 農曆${d.lunarMonth}${d.lunarDay}${d.tag ? ' ' + d.tag : ''}${ok ? '' : ' 不可選：' + reason}`,
       'aria-pressed': state.date === date ? 'true' : 'false',
       onclick: () => { state.date = date; render(); },
     }, h('span', { class: 's' }, i), h('span', { class: 'l' }, ok || !reason ? d.lunar : reason.slice(0, 5))));
@@ -59,9 +59,9 @@ function calendar() {
       h('button', { type: 'button', 'aria-label': '下個月', disabled: mi >= months.length - 1, onclick: () => { state.month = months[mi + 1]; render(); } }, '›')),
     h('div', { class: 'grid' }, ['日', '一', '二', '三', '四', '五', '六'].map((w) => h('div', { class: 'dow' }, w)), cells),
     h('div', { class: 'legend' },
-      h('span', {}, h('i', { style: 'background:var(--peak-bg);border:1px solid var(--accent)' }), '農曆大月（初一、初二、十五、十六）'),
+      h('span', {}, h('i', { style: 'background:var(--peak-bg);border:1px solid var(--accent)' }), '敬果日・公司拜拜（備貨日）'),
       h('span', {}, h('i', { style: 'border:1px dashed var(--dis)' }), '不可選')),
-    p && state.date ? h('p', { class: 'picked' }, `已選：${p.date}（週${p.weekday}）農曆${p.lunarMonth}${p.lunarDay}${p.peak ? '・大月' : ''}`) : h('p', { class: 'hint' }, '請點選日期'),
+    p && state.date ? h('p', { class: 'picked' }, `已選：${p.date}（週${p.weekday}）農曆${p.lunarMonth}${p.lunarDay}${p.tag ? '・' + p.tag : ''}`) : h('p', { class: 'hint' }, '請點選日期'),
     h('p', { class: 'hint' }, `小量訂購需提前 ${data.settings.minLeadDaysSmall} 天；${data.settings.largeOrderQty} 份以上需提前 ${data.settings.minLeadDaysLarge} 天；不可當天訂、當天送。`));
 }
 

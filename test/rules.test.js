@@ -26,7 +26,7 @@ test('timezone: 17:00 UTC is already next day in Taipei', () => {
 test('Monday closed, but open on lunar 初一/初二/十五/十六', () => {
   const plain = findMonday((l) => ![1, 2, 15, 16].includes(l.day));
   assert.equal(dayStatus(plain, S).open, false);
-  assert.equal(dayStatus(plain, S).reason, '週一公休');
+  assert.equal(dayStatus(plain, S).reason, '公休');
   for (const day of [1, 2, 15, 16]) {
     const d = findMonday((l) => l.day === day);
     assert.equal(dayStatus(d, S).open, true, `Monday lunar ${day}`);
@@ -36,9 +36,10 @@ test('Monday closed, but open on lunar 初一/初二/十五/十六', () => {
 
 test('national holiday on Monday is open; blocked date is closed', () => {
   const plain = findMonday((l) => ![1, 2, 15, 16].includes(l.day));
-  assert.equal(dayStatus(plain, { ...S, nationalHolidays: [plain] }).open, true);
+  assert.equal(dayStatus(plain, { ...S, specialOpenDates: [plain + ' 國定假日'] }).open, true);
   const tue = addDays(plain, 1);
   assert.equal(dayStatus(tue, { ...S, blockedDates: [tue] }).open, false);
+  assert.equal(dayStatus(plain, { ...S, specialOpenDates: [plain + ' 國定假日'] }).reason, '國定假日');
 });
 
 test('lead time: small 3 days, large 7 days, no same day', () => {
@@ -62,4 +63,12 @@ test('totals: delivery adds NT$50, pickup free', () => {
 test('availability marks full days', () => {
   const { days } = buildAvailability(S, { '2026-10-06': 500000 }, NOW);
   assert.equal(days.find((d) => d.date === '2026-10-06').full, true);
+});
+
+test('October 2026 poster: Mondays 5/12/19 closed, 26 open (owner override), 敬果日 and 公司拜拜 tags', () => {
+  for (const d of ['2026-10-05', '2026-10-12', '2026-10-19']) assert.equal(dayStatus(d, S).open, false, d);
+  assert.equal(dayStatus('2026-10-26', S).open, true);
+  for (const d of ['2026-10-09', '2026-10-10', '2026-10-23', '2026-10-24']) assert.equal(dayStatus(d, S).tag, '敬果日', d);
+  for (const d of ['2026-10-11', '2026-10-25']) assert.equal(dayStatus(d, S).tag, '公司拜拜', d);
+  assert.equal(dayStatus('2026-10-13', S).tag, '');
 });
