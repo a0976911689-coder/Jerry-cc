@@ -97,5 +97,5 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 
 ## Brand & visual style
 - Shop name: **英仔果子行 (A Ying Fruit)**. Logo: `public/logo.png` (red apple, black brush lettering, orange "A Ying Fruit"); LINE QR: `public/line-qr.png`.
-- Palette from the logo: apple red `#e00715`, black `#111`, orange `#eb6501`, white background. **Square corners only — no rounded cards, pills or circles.** Thick black borders, left red bar on section titles.
-- Owner wants the look, colours and layout to follow the 六月初一 gift-box shop. We could not access their site; ask the owner for screenshots before changing layout further. Never copy their logo, photos or copy.
+- Layout follows the 六月初一 mobile storefront (owner screenshot): white top bar with logo + cart total, black announcement band with a copper "可送達日期查詢" button, three wine-red tiles (公定版 / 客製化 / 門市自取), cream `#f5f0e8` background, section titles centred in a tan bordered box between tan lines. Colours: wine `#8b2a38`, copper `#c97b3f`, tan `#b08d62`, dark-brown ink; logo keeps its own red/black/orange.
+- Square corners only. Never copy 六月初一 logo, photos or copy.

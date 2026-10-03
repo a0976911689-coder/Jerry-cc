@@ -85,7 +85,7 @@ async function submit() {
 function renderDone(o) {
   const s = data.settings;
   app.replaceChildren(h('div', { class: 'done' },
-    h('h2', {}, '✓ 訂單已送出'),
+    h('h2', {}, h('span', {}, '✓ 訂單已送出')),
     h('p', {}, '訂單編號'), h('p', { class: 'id' }, o.id),
     h('p', {}, `送達日期：${o.date}`),
     h('p', {}, `合計 ${money(o.totals.total)}（現金付款）`),
@@ -108,10 +108,21 @@ function render() {
 
   const delivery = state.method === 'delivery';
   app.replaceChildren(
-    h('header', { class: 'hero' }, h('img', { src: '/logo.png', alt: '英仔果子行 A Ying Fruit' }), h('h1', { class: 'sr' }, '英仔果子行 A Ying Fruit'), h('p', {}, `線上訂購　營業時間 ${s.openTime}–${s.closeTime}`)),
-    h('div', { class: 'notice' }, '固定週一公休；遇農曆初一、初二、十五、十六及國定假日照常營業。付款方式：現金。'),
+    h('div', { class: 'topbar' },
+      h('img', { src: '/logo.png', alt: '英仔果子行 A Ying Fruit' }),
+      h('div', { class: 'cartbox', 'aria-live': 'polite' }, `${state.qty} 份　`, h('span', { id: 'tot2' }, money(t.total)))),
+    h('div', { class: 'announce' },
+      h('button', { class: 'go', type: 'button', onclick: () => document.getElementById('sec-date').scrollIntoView({ behavior: 'smooth' }) }, '📅 最新可送達日期查詢'),
+      h('p', {}, `營業時間 ${s.openTime}–${s.closeTime}　固定週一公休（農曆初一、初二、十五、十六及國定假日照常營業）`),
+      h('p', {}, '付款方式：現金。配送僅限永安、彌陀、岡山、梓官，其餘地區請本店自取。')),
+    h('div', { class: 'wrap' },
+    h('div', { class: 'tiles' },
+      h('button', { class: 'tile', type: 'button', onclick: () => document.getElementById('sec-item').scrollIntoView({ behavior: 'smooth' }) }, h('small', {}, 'standard'), h('b', {}, '公定版訂購')),
+      s.lineUrl ? h('a', { class: 'tile', href: s.lineUrl }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢'))
+        : h('button', { class: 'tile', type: 'button', onclick: () => document.getElementById('sec-item').scrollIntoView({ behavior: 'smooth' }) }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢')),
+      h('button', { class: 'tile', type: 'button', onclick: () => { state.method = 'pickup'; render(); document.getElementById('sec-way').scrollIntoView({ behavior: 'smooth' }); } }, h('small', {}, 'store pickup'), h('b', {}, '門市自取'))),
 
-    h('section', { class: 'card' }, h('h2', {}, '1. 選擇品項'),
+    h('section', { class: 'card', id: 'sec-item' }, h('h2', {}, h('span', {}, '1. 選擇品項')),
       h('div', { class: 'product' },
         h('div', {}, h('div', { class: 'name' }, '公定版 果品'), h('div', { class: 'desc' }, '宮廟節慶適用')),
         h('div', { class: 'price' }, money(s.standardPrice)),
@@ -127,7 +138,7 @@ function render() {
         s.lineUrl ? h('a', { class: 'btn small ghost', href: s.lineUrl, style: 'text-decoration:none' }, '私訊 LINE 洽詢') : h('span', { class: 'hint' }, '請掃描下方 QR Code 加 LINE 洽詢')),
       !s.lineUrl && h('img', { class: 'qr', src: '/line-qr.png', alt: '英仔果子行 LINE QR Code' })),
 
-    h('section', { class: 'card' }, h('h2', {}, '2. 包裝與卡片'),
+    h('section', { class: 'card' }, h('h2', {}, h('span', {}, '2. 包裝與卡片')),
       field('包裝', h('select', { 'data-f': 'pack', onchange: (e) => { state.packagingId = e.target.value; render(); } },
         s.packagingOptions.map((p) => h('option', { value: p.id, selected: p.id === state.packagingId }, p.fee ? `${p.name}（每份＋${money(p.fee)}）` : p.name)))),
       field('卡片文字（選填）', h('textarea', { 'data-f': 'card', maxlength: s.cardTextMaxLength, placeholder: '例如：平安順心、福氣滿滿',
@@ -135,7 +146,7 @@ function render() {
         ''),
       h('p', { class: 'hint', id: 'cc' }, `${state.cardText.length}/${s.cardTextMaxLength}`)),
 
-    h('section', { class: 'card' }, h('h2', {}, '3. 配送或自取'),
+    h('section', { class: 'card', id: 'sec-way' }, h('h2', {}, h('span', {}, '3. 配送或自取')),
       h('div', { class: 'choice', role: 'radiogroup' },
         ['pickup', 'delivery'].map((v) => h('label', {}, h('input', { type: 'radio', name: 'method', value: v, checked: state.method === v,
           onchange: () => { state.method = v; render(); } }), h('span', {}, v === 'pickup' ? '本店自取（免運）' : `配送（運費 ${money(s.shippingFee)}）`)))),
@@ -148,15 +159,15 @@ function render() {
         : h('p', { class: 'hint' }, s.storeAddress ? `取貨地點：${s.storeAddress}` : '取貨地點請以店家通知為準。'),
       ),
 
-    h('section', { class: 'card' }, h('h2', {}, '4. 送達（取貨）日期'), calendar()),
+    h('section', { class: 'card', id: 'sec-date' }, h('h2', {}, h('span', {}, '4. 送達（取貨）日期')), calendar()),
 
-    h('section', { class: 'card' }, h('h2', {}, '5. 聯絡資料'),
+    h('section', { class: 'card' }, h('h2', {}, h('span', {}, '5. 聯絡資料')),
       field('姓名', text('name', { autocomplete: 'name' })),
       field('聯絡電話', h('input', { type: 'tel', value: state.phone, 'data-f': 'phone', autocomplete: 'tel', inputmode: 'tel', placeholder: '0912-345-678',
         oninput: (e) => { state.phone = e.target.value; } })),
       field('備註（選填）', text('note', { maxlength: 200 }))),
 
-    state.error && h('p', { class: 'error', role: 'alert' }, state.error),
+    state.error && h('p', { class: 'error', role: 'alert' }, state.error)),
     h('div', { class: 'bar' }, h('div', { class: 'inner' },
       h('div', { class: 'sum' }, `${state.qty} 份${t.shipping ? ` ＋運費 ${money(t.shipping)}` : ''}・現金付款`, h('b', { id: 'tot' }, money(t.total))),
       h('button', { class: 'btn', type: 'button', disabled: state.submitting, onclick: submit }, state.submitting ? '送出中…' : '送出訂單'))));
@@ -167,7 +178,7 @@ function render() {
   }
 }
 
-function update() { const el = document.getElementById('tot'); if (el) el.textContent = money(totals().total); }
+function update() { const v = money(totals().total); for (const id of ['tot', 'tot2']) { const el = document.getElementById(id); if (el) el.textContent = v; } }
 
 try {
   data = await api('/public');
