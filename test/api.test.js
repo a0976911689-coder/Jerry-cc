@@ -75,3 +75,19 @@ test('public month calendar needs no login and matches the owner poster', async 
   assert.equal(r.body.days[9].tag, '敬果日'); // 10/10
   assert.equal((await call('GET', '/calendar?month=bad')).status, 400);
 });
+
+test('sheet/email notification posts a row and survives failures', async () => {
+  const { pushToSheet, sheetRow } = await import('../lib/notify.js');
+  const order = { id: 'X-1', createdAt: '2026-10-03T00:00:00Z', date: '2026-10-07', dateInfo: { lunarMonth: '九月', lunarDay: '十七', tag: '' },
+    method: 'delivery', customer: { name: '王', phone: '0912345678', district: '岡山區', address: '甘肅路1號' }, kind: 'standard', qty: 2,
+    packagingName: '標準包裝', cardText: '平安', note: '', totals: { total: 1250, shipping: 50 } };
+  assert.equal(sheetRow(order).length, 15);
+  assert.equal((await pushToSheet(order)).ok, false); // not configured
+  process.env.GOOGLE_SCRIPT_URL = 'https://script.example/exec'; process.env.GOOGLE_SCRIPT_SECRET = 's';
+  let sent;
+  const ok = await pushToSheet(order, async (u, init) => { sent = JSON.parse(init.body); return new Response(JSON.stringify({ ok: true })); });
+  assert.equal(ok.ok, true); assert.equal(sent.secret, 's'); assert.equal(sent.total, 1250);
+  assert.equal((await pushToSheet(order, async () => new Response('x', { status: 500 }))).ok, false);
+  assert.equal((await pushToSheet(order, async () => { throw new Error('net'); })).ok, false);
+  delete process.env.GOOGLE_SCRIPT_URL; delete process.env.GOOGLE_SCRIPT_SECRET;
+});

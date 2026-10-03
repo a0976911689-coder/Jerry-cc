@@ -151,7 +151,7 @@ function render() {
       h('p', {}, '付款方式：現金。配送僅限永安、彌陀、岡山、梓官，其餘地區請本店自取。')),
     h('div', { class: 'wrap' },
     h('div', { class: 'tiles' },
-      h('button', { class: 'tile', type: 'button', onclick: () => goTo('sec-item') }, h('small', {}, 'standard'), h('b', {}, '公定版訂購')),
+      h('button', { class: 'tile', type: 'button', onclick: () => goTo('sec-item') }, h('small', {}, 'standard'), h('b', {}, '公訂版訂購')),
       s.lineUrl ? h('a', { class: 'tile', href: s.lineUrl }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢'))
         : h('button', { class: 'tile', type: 'button', onclick: () => goTo('sec-item') }, h('small', {}, 'custom'), h('b', {}, '客製化洽詢')),
       h('button', { class: 'tile', type: 'button', onclick: () => { state.method = 'pickup'; render(); goTo('sec-way'); } }, h('small', {}, 'store pickup'), h('b', {}, '門市自取'))),
@@ -160,10 +160,10 @@ function render() {
 
     h('section', { class: 'card', id: 'sec-item' }, h('h2', {}, h('span', {}, '1. 選擇品項')),
       h('article', { class: 'item' },
-        h('img', { class: 'photo', src: '/images/standard-basket.jpg', alt: '公定版水果禮籃：鳳梨搭配水果，紅色蝴蝶結與藤編提籃', width: 900, height: 1125 }),
+        h('img', { class: 'photo', src: '/images/standard-basket.jpg', alt: '公訂版水果禮籃：鳳梨搭配水果，紅色蝴蝶結與藤編提籃', width: 900, height: 1125 }),
         h('div', { class: 'item-body' },
           h('p', { class: 'eyebrow' }, 'standard'),
-          h('h3', {}, '公定版 水果禮籃'),
+          h('h3', {}, '公訂版 水果禮籃'),
           h('p', { class: 'desc' }, '宮廟節慶適用，統一規格。'),
           h('p', { class: 'price' }, money(s.standardPrice), h('small', {}, ' / 份')),
           h('div', { class: 'stepper' },

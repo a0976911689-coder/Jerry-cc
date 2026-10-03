@@ -49,14 +49,14 @@ async function viewToday() {
         : h('p', { class: 'hint' }, '未來幾天沒有敬果日或公司拜拜。')),
     h('section', { class: 'card' }, h('h2', {}, '備貨總表'), dateInput,
       h('p', { class: 'hint' }, `${dateLabel(ov.dayStatus)}　${ov.dayStatus.open ? '營業' : '公休'}${ov.dayStatus.reason ? '：' + ov.dayStatus.reason : ''}`),
-      h('div', { class: 'stat' }, h('div', {}, h('b', {}, p.orders), '訂單'), h('div', {}, h('b', {}, p.qty), '公定版份數'),
+      h('div', { class: 'stat' }, h('div', {}, h('b', {}, p.orders), '訂單'), h('div', {}, h('b', {}, p.qty), '公訂版份數'),
         h('div', {}, h('b', {}, p.custom), '客製化'), h('div', {}, h('b', {}, p.delivery), '配送'), h('div', {}, h('b', {}, p.pickup), '自取'),
         h('div', {}, h('b', {}, money(p.total)), '金額')),
       Object.keys(p.packaging).length > 0 && h('p', {}, '包裝：', Object.entries(p.packaging).map(([k, v]) => `${k} ×${v}`).join('、'))));
 }
 
 function orderCard(o, reload) {
-  const lines = o.kind === 'custom' ? [`客製化：${o.description || ''}`] : [`公定版 × ${o.qty}　包裝：${o.packagingName}`];
+  const lines = o.kind === 'custom' ? [`客製化：${o.description || ''}`] : [`公訂版 × ${o.qty}　包裝：${o.packagingName}`];
   const patch = async (body) => { await call(`/admin/orders/${o.id}`, { method: 'PATCH', body }); reload(); };
   const sel = h('select', { 'aria-label': '訂單狀態', onchange: (e) => patch({ status: e.target.value }) },
     Object.entries(STATUS).map(([k, v]) => h('option', { value: k, selected: k === o.status }, v)));
@@ -68,7 +68,8 @@ function orderCard(o, reload) {
     o.cardText && h('pre', {}, `卡片：${o.cardText}`),
     o.note && h('div', { class: 'hint' }, `備註：${o.note}`),
     h('div', {}, `合計 ${money(o.totals.total)}${o.totals.shipping ? `（含運費 ${money(o.totals.shipping)}）` : ''}`,
-      o.line && !o.line.ok && h('span', { class: 'tag bad', style: 'margin-left:8px' }, `LINE 推送失敗：${o.line.error}`)),
+      o.line && !o.line.ok && h('span', { class: 'tag bad', style: 'margin-left:8px' }, `LINE 推送失敗：${o.line.error}`),
+      o.sheet && !o.sheet.ok && h('span', { class: 'tag bad', style: 'margin-left:8px' }, `Google 通知失敗：${o.sheet.error}`)),
     h('div', { class: 'row', style: 'margin-top:8px' }, sel,
       h('button', { class: 'btn small ghost', onclick: () => patch({ paid: !o.paid }) }, o.paid ? '改為待收款' : '標記已收現金')));
 }
@@ -125,7 +126,7 @@ async function viewSettings() {
   const num = (k, label, hint) => { const i = h('input', { type: 'number', value: s[k] }); return [k, i, h('div', {}, h('label', {}, label), i, hint && h('p', { class: 'hint' }, hint))]; };
   const txt = (k, label, hint, rows = 3) => { const i = h('textarea', { rows }, Array.isArray(s[k]) ? s[k].join('\n') : (s[k] ?? '')); return [k, i, h('div', {}, h('label', {}, label), i, hint && h('p', { class: 'hint' }, hint))]; };
   const rows = [
-    num('standardPrice', '公定版價格 (NT$)'), num('shippingFee', '配送運費 (NT$)'),
+    num('standardPrice', '公訂版價格 (NT$)'), num('shippingFee', '配送運費 (NT$)'),
     num('minLeadDaysSmall', '小量訂購：最短提前天數'), num('minLeadDaysLarge', '大量訂購：最短提前天數'),
     num('largeOrderQty', '大量訂購門檻（份數）'), num('maxAdvanceDays', '最多可提前預訂天數'),
     num('dailyCapAmount', '每日接單金額上限 (NT$)'), num('peakLookaheadDays', '拜拜備貨提醒：提前幾天顯示'), num('cardTextMaxLength', '卡片文字字數上限'),
