@@ -80,7 +80,7 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - **Daily order cap: NT$500,000 per delivery date**, measured by total order amount (not order count). Past record is about NT$200,000/day. Block a date (and show "該日已額滿，請私訊 LINE") when accepting an order would push that date over the cap. Cap lives in config; check it server-side in a transaction-safe way.
 - **Minimum lead time (confirmed): no same-day orders. Small orders need ≥ 3 days ahead; large orders need ≥ 7 days ahead.** There are no delivery time slots.
 - **Large order = 10 standard sets or more (confirmed by owner)**: `largeOrderQty` = 10 in settings, editable in the admin.
-- Maximum advance booking is also **unconfirmed** (owner earlier said "up to a week ahead", which conflicts with the 7-day minimum for large orders): implemented as `maxAdvanceDays` (default 90), editable in the admin.
+- **Maximum advance booking: 14 days (two weeks), set from the owner's answer** ('大量下訂…兩個禮拜以前'). So the bookable window is 3–14 days for small orders and 7–14 days for large orders. `maxAdvanceDays` = 14, editable. Re-confirm if the owner meant a 14-day *minimum* for large orders instead.
 
 ## Working rules
 - Ask the owner before inventing business rules (large-order threshold, max advance booking, store address, packaging options and fees). Put them in config/data, not hard-coded.
@@ -106,3 +106,6 @@ Use together with `storefront-best-practices` for generic storefront UI/UX (prod
 - Only 初一/初二/十五/十六 auto-open a Monday. Other Monday openings are one-off and entered by the owner each month in admin settings as `特別營業日` lines (`YYYY-MM-DD 備註`); extra closures go in `額外休息日`. The code seeds `2026-10-26 正常營業`.
 - Unconfirmed: whether a Monday that is 十四 or the 月底 eve should also open (currently closed unless listed).
 - `lib/rules.test` asserts the October 2026 poster dates, so rule changes that break the poster fail tests.
+
+## Packaging & extra services (confirmed)
+- Packaging has **no surcharge** (single option 標準包裝, fee 0). Products are mostly used for temple 結緣 (blessing offerings). Any other extra service → customer messages LINE; do not add self-serve extras.
