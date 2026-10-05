@@ -5,7 +5,7 @@ mkdirSync('out', { recursive: true });
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
 const p = await b.newPage({ viewport: { width: 1400, height: 1200 } });
 await p.goto('file://' + process.cwd() + '/line.html');
-await p.waitForTimeout(500);
+await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(800);
 await (await p.$('#cover')).screenshot({ path: 'out/line-cover.png' });
 await (await p.$('#list')).screenshot({ path: 'out/line-list.png' });
 await b.close();

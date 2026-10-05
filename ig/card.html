@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<title>英仔水果 單品卡片</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--wine:#6B1F2A;--cream:#FAF5EC;--gold:#C9A96E}
+*{box-sizing:border-box;margin:0}
+body{background:#999;font-family:'Noto Serif TC',serif;font-weight:700;display:flex;flex-wrap:wrap;gap:24px;padding:24px}
+.card{flex:none;width:1080px;height:1350px;background:var(--wine);color:var(--cream);position:relative;display:flex;flex-direction:column;padding:60px 60px 56px}
+.frame{position:absolute;inset:22px;border:2px solid var(--gold);pointer-events:none}
+.photo{height:660px;background-size:cover;background-position:center;border:3px solid var(--gold);position:relative}
+.stamp{position:absolute;left:0;bottom:0;background:var(--wine);color:var(--gold);font-size:38px;padding:14px 34px;letter-spacing:.14em;border-top:3px solid var(--gold);border-right:3px solid var(--gold)}
+.body{flex:1;display:flex;flex-direction:column;padding:44px 20px 0}
+.tag{align-self:flex-start;border:2px solid var(--gold);color:var(--gold);font-size:36px;padding:6px 26px;letter-spacing:.1em}
+h2{font-size:112px;font-weight:900;line-height:1.2;margin:26px 0 18px;color:#fff}
+p{font-size:44px;line-height:1.65;color:rgba(250,245,236,.85)}
+.price{font-size:60px;color:var(--gold);margin-top:14px}
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:36px;color:var(--gold);letter-spacing:.08em}
+.foot b{border:2px solid var(--gold);padding:10px 30px;border-radius:50px;font-weight:700}
+</style></head><body>
+<script>
+// ===== 每天只需改這裡 =====
+const DATE = '10／5';
+const ITEMS = [
+ {file:'ponkan', name:'東山椪柑', origin:'台南東山', desc:'果皮鮮綠，汁多好剝。', price:'', img:'photos/ponkan.jpg'},
+ {file:'longan', name:'十月龍眼', origin:'台中', desc:'十月當季龍眼，一串一串帶回家。', price:'', img:'photos/longan.jpg'},
+ {file:'honeydew', name:'美國蜜世界', origin:'美國空運', desc:'整顆個頭大，果肉清甜，聚會分享剛好。', price:'', img:'photos/honeydew.jpg'},
+ {file:'pomelo', name:'老欉文旦', origin:'雲林斗六', desc:'老欉栽培的文旦，適合送禮、拜拜。', price:'', img:'photos/pomelo.jpg'},
+ {file:'apple', name:'San Clemente 蘋果', origin:'智利進口', desc:'紅潤漂亮的進口蘋果，削皮或直接吃都好。', price:'', img:'photos/apple.jpg'}
+];
+// ==========================
+document.body.insertAdjacentHTML('beforeend', ITEMS.map(i=>`<div class="card" data-file="${i.file}"><div class="frame"></div>
+ <div class="photo" style="background-image:url(${i.img})"><div class="stamp">${DATE} 今日推薦</div></div>
+ <div class="body"><span class="tag">${i.origin}</span><h2 style="${i.name.length>7?"font-size:88px":""}">${i.name}</h2><p>${i.desc}</p>${i.price?`<div class="price">${i.price}</div>`:''}
+ <div class="foot"><span>英仔水果・北高雄</span><b>回覆 LINE 訂購</b></div></div></div>`).join(''));
+</script></body></html>
