@@ -1,0 +1,12 @@
+{
+  "name": "line-order",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "英仔水果 LINE 訂單機器人（Netlify Function，無外部相依套件）",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "simulate": "node scripts/simulate.mjs"
+  },
+  "engines": { "node": ">=20" }
+}
