@@ -29,9 +29,9 @@ body{background:#999;font-family:'Noto Serif TC',serif;font-weight:700;display:f
 .card .ph{flex:0 0 380px;height:380px;background-size:cover;background-position:center;border:3px solid var(--gold)}
 .card .tx{flex:1;display:flex;flex-direction:column;justify-content:center}
 .tag{align-self:flex-start;background:var(--wine);color:var(--cream);font-size:32px;padding:6px 24px;letter-spacing:.08em}
-.card h3{font-size:60px;font-weight:900;margin:22px 0 14px;line-height:1.2;color:var(--wine)}
+.card h3{font-size:56px;font-weight:900;margin:22px 0 14px;line-height:1.2;color:var(--wine)}
 .card p{font-size:36px;line-height:1.65;color:#4a4a4a}
-.price{margin-top:14px;font-size:44px;font-weight:700;color:var(--wine)}
+.price{margin-top:12px;font-size:52px;font-weight:700;color:var(--wine)}
 .cta{background:var(--wine);color:var(--cream);padding:70px;text-align:center}
 .cta h4{font-size:64px;font-weight:900;color:var(--gold);line-height:1.3}
 .cta p{font-size:40px;line-height:1.8;margin-top:22px}
@@ -39,13 +39,14 @@ body{background:#999;font-family:'Noto Serif TC',serif;font-weight:700;display:f
 </style></head><body>
 <script>
 // ===== 每天只需改這裡 =====
-const DATE = '10／5';
+const DATE = (() => { const t = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Taipei' })); return `${t.getMonth() + 1}／${t.getDate()}`; })();
 const ITEMS = [
- {name:'東山椪柑', origin:'台南東山', desc:'果皮鮮綠，汁多好剝。', price:'', img:'photos/ponkan.jpg'},
- {name:'十月龍眼', origin:'台中', desc:'十月當季龍眼，一串一串帶回家。', price:'', img:'photos/longan.jpg'},
- {name:'美國蜜世界', origin:'美國空運', desc:'整顆個頭大，果肉清甜，聚會分享剛好。', price:'', img:'photos/honeydew.jpg'},
- {name:'老欉文旦', origin:'雲林斗六', desc:'老欉栽培的文旦，中秋過後也適合送禮、拜拜。', price:'', img:'photos/pomelo.jpg'},
- {name:'San Clemente 蘋果', origin:'智利進口', desc:'紅潤漂亮的進口蘋果，削皮或直接吃都好。', price:'', img:'photos/apple.jpg'}
+ {file:'apple', name:'智利蘋果', origin:'智利進口', desc:'今日推薦新品。', price:'3 顆 100 元', img:'photos/apple-new.jpg'},
+ {file:'honeydew', name:'美國蜜世界', origin:'美國空運', desc:'今日推薦新品。', price:'1 顆 400 元', img:'photos/melon-new.jpg'},
+ {file:'passion', name:'藍星百香果', origin:'今日新品', desc:'這超香，吃起來超甜！', price:'5 粒 100 元', img:'photos/passion.jpg'},
+ {file:'persimmon', name:'次郎甜柿', origin:'今日新品', desc:'今日推薦新品。', price:'1 顆 50 元', img:'photos/persimmon.jpg'},
+ {file:'dragonfruit', name:'火龍果', origin:'今日新品', desc:'今日推薦新品，按斤計價。', price:'60 元／斤', img:'photos/dragonfruit.jpg'},
+ {file:'ponkan', name:'東山椪柑', origin:'今日新品', desc:'今日推薦新品，按斤計價。', price:'80 元／斤', img:'photos/ponkan-new.jpg'}
 ];
 // ==========================
 const cover = `<div id="cover"><div class="frame"></div>
