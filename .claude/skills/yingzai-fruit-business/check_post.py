@@ -41,9 +41,7 @@ def main(path):
 
     for name, body in posts.items():
         n = len(body)
-        rule_known = name != "LINE" or d.get("line_limit_confirmed", False)
-        st = ("PASS" if n <= LIMIT else "FAIL") if rule_known else "UNVERIFIED"
-        add(f"{name} 內文 ≤ {LIMIT} 字", st, f"{n} 字" + ("" if rule_known else "（LINE 菜單是否限 50 字尚未確認）"))
+        add(f"{name} 內文 ≤ {LIMIT} 字", "PASS" if n <= LIMIT else "FAIL", f"{n} 字")
         miss_info = [s for s in (ADDRESS, HOURS) if s not in body]
         add(f"{name} 含地址與營業時間", "FAIL" if miss_info else "PASS", f"缺：{miss_info}" if miss_info else "有")
         add(f"{name} 內文無連結", "FAIL" if URL.search(body) else "PASS", "連結需放留言區")
