@@ -45,8 +45,9 @@ def main(path):
         miss_info = [s for s in (ADDRESS, HOURS) if s not in body]
         add(f"{name} 含地址與營業時間", "FAIL" if miss_info else "PASS", f"缺：{miss_info}" if miss_info else "有")
         add(f"{name} 內文無連結", "FAIL" if URL.search(body) else "PASS", "連結需放留言區")
-    fb = posts.get("FB", "")
-    add("FB 無價目表", "FAIL" if len(PRICE_LINE.findall(fb)) >= 2 else "PASS", f"FB 內文價格出現 {len(PRICE_LINE.findall(fb))} 次（≥2 視為價目表）")
+    for name in ("Threads", "FB", "IG"):  # 公開平台不寫價錢，價錢只放 LINE 聊天群
+        n = len(PRICE_LINE.findall(posts.get(name, "")))
+        add(f"{name} 公開平台無價錢", "FAIL" if n else "PASS", f"價錢出現 {n} 次（價錢只放 LINE 聊天群）")
 
     hits = [w for w in BANNED if w in allt]
     add("無禁用詞", "FAIL" if hits else "PASS", f"命中：{hits}" if hits else "0 個")
