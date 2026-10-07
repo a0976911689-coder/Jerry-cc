@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><title>輪播結尾 追蹤與LINE</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--wine:#6B1F2A;--cream:#FAF5EC;--gold:#C9A96E}
+*{box-sizing:border-box;margin:0}
+body{background:#999;font-family:'Noto Serif TC',serif;font-weight:700;padding:24px}
+.slide{width:1080px;height:1350px;background:var(--wine);color:var(--cream);position:relative;padding:120px 100px;display:flex;flex-direction:column}
+.frame{position:absolute;inset:26px;border:2px solid var(--gold)}
+.k{color:var(--gold);font-size:40px;letter-spacing:.16em}
+h2{font-size:104px;font-weight:900;line-height:1.25;margin-top:30px}
+h2 em{font-style:normal;color:var(--gold)}
+.bar{width:90px;height:5px;background:var(--gold);margin:44px 0}
+.row{display:flex;gap:28px;align-items:flex-start;font-size:46px;line-height:1.5;margin-bottom:30px}
+.n{flex:none;width:64px;height:64px;border:3px solid var(--gold);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px}
+.bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end}
+.qr{width:250px;height:250px;border:3px dashed var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:30px;text-align:center}
+.small{font-size:32px;color:rgba(250,245,236,.75);line-height:1.7}
+</style></head><body>
+<script>
+// ===== 改這裡 =====
+const LINE_ID = '@你的LINE ID';
+// ==================
+document.body.insertAdjacentHTML('beforeend', `<div class="slide"><div class="frame"></div>
+ <div class="k">小英水果小教室 ・ 英仔水果</div>
+ <h2>喜歡這篇？<br><em>別錯過明天的新品</em></h2><div class="bar"></div>
+ <div class="row"><span class="n">1</span><span>按讚追蹤，每天新品和價格第一手</span></div>
+ <div class="row"><span class="n">2</span><span>想訂購，加 LINE：${LINE_ID}<br>直接回覆「品名＋數量」</span></div>
+ <div class="bottom"><div class="small">中午 12:00 前下單當天送<br>北高雄配送 ・ 可自取 ・ 現金付款</div><div class="qr">放 LINE<br>QR Code</div></div></div>`);
+</script></body></html>
