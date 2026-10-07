@@ -1,64 +1,59 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8">
-<title>英仔果子行 輪播範本</title>
-<link rel="stylesheet" href="fonts/fonts.css">
+<html lang="zh-Hant"><head><meta charset="utf-8"><title>英仔水果小教室 IG 輪播</title>
+<link rel="stylesheet" href="fonts/wenkai/wenkai.css">
 <style>
-:root{--wine:#6B1F2A;--cream:#FAF5EC;--gold:#C9A96E;--ink:#2B2B2B}
+/* 配色取自小英仔的 Canva 設計；字體：Canva 外以霞鶩文楷 TC 粗體＋描邊，呈現毛筆粗體風格 */
+:root{--paper:#F3EEE4;--ink:#1E1E1E;--sun:#E9C46A;--slate:#5C6F7E;--accent:#D9673A}
 *{box-sizing:border-box;margin:0}
-body{background:#222;font-family:'Noto Serif TC',serif;font-weight:700;display:flex;flex-wrap:wrap;gap:24px;padding:24px}
-.slide{width:1080px;height:1350px;position:relative;overflow:hidden;padding:150px 100px 110px 90px;display:flex;flex-direction:column;color:var(--cream);background-size:cover;background-position:center}
-.serif{font-family:'Noto Serif TC','WenQuanYi Zen Hei',serif}
-.label{font-size:44px;font-weight:700;color:var(--gold);letter-spacing:.12em}
-.bar{width:64px;height:5px;background:var(--gold);margin:26px 0 54px}
-h2{font-size:100px;line-height:1.3;font-weight:900;color:#fff}
-.sub{font-size:46px;color:rgba(250,245,236,.62);margin-top:30px;letter-spacing:.04em}
-.box{margin-top:60px;border-left:7px solid var(--gold);background:rgba(250,245,236,.14);padding:48px 56px;font-size:50px;line-height:1.95;letter-spacing:.04em}
-.box b{color:var(--gold)}
-.price{margin-top:34px;font-size:56px;font-weight:700;color:var(--gold)}
-.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-size:34px;color:rgba(250,245,236,.55)}
-.foot .gold{color:var(--gold);font-size:44px;font-weight:700}
-.center{justify-content:center}
-.big{font-size:118px;line-height:1.28}
-em{font-style:normal;color:var(--gold)}
-.swipe{align-self:flex-start;margin-top:56px;border:3px solid var(--gold);color:var(--gold);padding:16px 40px;font-size:42px;font-weight:700;letter-spacing:.1em;border-radius:60px}
-.swipe span{margin-left:12px}
-.qr{width:280px;height:280px;border:3px dashed var(--gold);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:32px;margin-top:50px}
+body{background:#888;display:flex;flex-wrap:wrap;gap:24px;padding:24px}
+.slide{flex:none;width:1080px;height:1350px;position:relative;overflow:hidden;color:var(--ink);padding:90px 90px 70px;display:flex;flex-direction:column;align-items:center;text-align:center;
+ font-family:'LXGW WenKai TC',serif;font-weight:700;-webkit-text-stroke:.6px currentColor;
+ background:radial-gradient(circle at 18% 12%,rgba(255,255,255,.6),transparent 40%),radial-gradient(circle at 85% 85%,rgba(200,185,160,.28),transparent 45%),var(--paper)}
+.series{font-size:38px;color:var(--slate);letter-spacing:.3em;-webkit-text-stroke:0}
+.page{position:absolute;top:40px;right:52px;font-size:30px;color:var(--slate);-webkit-text-stroke:0}
+.big{font-size:128px;line-height:1.25;margin-top:auto}
+.big em{font-style:normal;color:var(--accent)}
+.sunwrap{position:relative;width:860px;height:640px;margin:34px 0 26px;display:flex;align-items:center;justify-content:center}
+.sun{position:absolute;width:620px;height:620px;border-radius:50%;background:var(--sun);opacity:.55}
+.photo{position:relative;width:800px;height:580px;border-radius:28px;background-size:cover;background-position:center;box-shadow:0 18px 40px rgba(60,40,20,.18)}
+h2{font-size:112px;line-height:1.2}
+.say{font-size:50px;color:var(--slate);margin-top:16px}
+.price{font-size:88px;color:var(--accent);margin-top:14px}
+.tipbox{margin-top:50px;font-size:58px;line-height:1.7;text-align:left;border-left:10px solid var(--sun);padding:20px 40px}
+.swipe{margin:50px 0 auto;font-size:44px;color:var(--slate);border:4px solid var(--slate);border-radius:60px;padding:14px 46px;-webkit-text-stroke:0}
+.qr{width:340px;height:340px;border:10px solid #fff;border-radius:16px;margin:40px 0 20px;box-shadow:0 10px 30px rgba(60,40,20,.15)}
+.info{font-size:42px;color:var(--slate);line-height:1.7;-webkit-text-stroke:0}
+.foot{margin-top:auto;width:100%;display:flex;justify-content:space-between;font-size:32px;color:var(--slate);-webkit-text-stroke:0}
 </style></head><body>
 <script>
-// ===== 每週只需改這裡 =====
+// ===== 每次只改這裡（至少 5 張：封面＋品項＋小技巧＋結尾，品項 1～5 樣） =====
+const SERIES = '英仔水果小教室';
 const HANDLE = '@a_yin_fruit';
-const CFG = {
-  cover: {label:'英仔果子行', title:['同樣是水果','為什麼有的','<em>超甜</em>有的<em>很酸</em>？'], sub:'答案＋這週 3 種必買，往右滑看', swipe:'滑動看答案', bg:'photos/grape.jpg'},
-  fruits: [
-    {label:'No.1 韓國', name:['粒粒飽滿','韓國麝香葡萄'], sub:'一顆一顆都飽滿', bg:'photos/grape.jpg',
-     points:['果粒圓潤飽滿','一口一顆很過癮','適合送禮、全家分食'], price:''},
-    {label:'No.2 美國', name:['巨爆甜','美國蜜世界'], sub:'整顆個頭大、清甜', bg:'photos/melon.jpg',
-     points:['個頭大、分量足','清甜好入口','適合聚會、全家分享'], price:''},
-    {label:'No.3 當季', name:['酸甜又多汁','砂糖橘'], sub:'小顆一口接一口', bg:'photos/mandarin.jpg',
-     points:['酸甜平衡','汁多好剝','適合日常、小朋友點心'], price:''}
-  ],
-  tip: {label:'答案揭曉', title:['3 招挑到','超甜好水果'], bg:'photos/mandarin.jpg',
-        points:['<b>葡萄</b>　看果粒飽滿、果梗翠綠','<b>蜜世界</b>　聞蒂頭有自然果香','<b>砂糖橘</b>　拿起來有沉手感']},
-  cta: {label:'想預訂？', title:['點主頁連結','加 LINE 預訂'], sub:'初一、十五前請提早預訂', bg:'photos/grape.jpg'}
-};
-// ==========================
-const OV = 'linear-gradient(rgba(28,8,12,.74),rgba(28,8,12,.80))';
-const bg = u => `background-image:${OV},url(${u})`;
-const foot = (l) => `<div class="foot"><span>${l||''}</span><span>${HANDLE}</span></div>`;
+const ADDRESS = '梓官區通安路215號';
+const HOURS = '06:00–12:00';
+const GROUP = '阿英的聊天群';
+const QR = 'assets/line-openchat-qr.jpg';
+const COVER = { lines: ['蜜世界買回家', '<em>先別急著切？</em>'], swipe: '往右滑看小英仔的提醒' };
+const ITEMS = [   // say 只能放小英仔親口說過的話
+  { name: '紐西蘭蘋果', say: '很脆又很甜', price: '3 顆 100 元', img: 'photos/apple-new.jpg' },
+  { name: '美國蜜世界', say: '買回家多放幾天再削', price: '1 顆 400 元', img: 'photos/melon-new.jpg' },
+  { name: '藍星百香果', say: '這超香，吃起來超甜', price: '5 粒 100 元', img: 'photos/passion.jpg' },
+];
+const TIP = { title: '小英仔的提醒', lines: ['蜜世界買回家', '多放幾天再削', '會更好吃'] };
+// ==========================================================================
+const total = ITEMS.length + 3;
+const foot = `<div class="foot"><span>英仔果子行・梓官</span><span>${HANDLE}</span></div>`;
+const page = n => `<span class="page">${n}／${total}</span>`;
 const S = [];
-const c=CFG.cover;
-S.push(`<div class="slide" style="${bg(c.bg)}"><div class="label serif">${c.label}</div><div class="bar"></div>
- <h2 class="serif big">${c.title.join('<br>')}</h2><div class="sub">${c.sub}</div>
- <div class="swipe">${c.swipe} <span>→</span></div>${foot('英仔果子行 ・ 梓官')}</div>`);
-CFG.fruits.forEach(f=>S.push(`<div class="slide" style="${bg(f.bg)}"><div class="label serif">${f.label}</div><div class="bar"></div>
- <h2 class="serif">${f.name[0]}<br>${f.name[1]}</h2><div class="sub">${f.sub}</div>
- <div class="box">${f.points.join('<br>')}</div>${f.price?`<div class="price">${f.price}</div>`:''}${foot('')}</div>`));
-const t=CFG.tip;
-S.push(`<div class="slide" style="${bg(t.bg)}"><div class="label serif">${t.label}</div><div class="bar"></div>
- <h2 class="serif">${t.title[0]}<br>${t.title[1]}</h2>
- <div class="box">${t.points.join('<br>')}</div>${foot('')}</div>`);
-const e=CFG.cta;
-S.push(`<div class="slide" style="${bg(e.bg)}"><div class="label serif">${e.label}</div><div class="bar"></div>
- <h2 class="serif">${e.title[0]}<br>${e.title[1]}</h2><div class="sub">${e.sub}</div><div class="qr">放 LINE QR</div>${foot('客製禮籃請私訊洽詢')}</div>`);
+S.push(`<div class="slide">${page(1)}<div class="series">${SERIES}</div><div class="big">${COVER.lines.join('<br>')}</div><div class="swipe">${COVER.swipe} →</div>${foot}</div>`);
+ITEMS.forEach((it, i) => S.push(`<div class="slide">${page(i + 2)}<div class="series">${SERIES}</div>
+ <div class="sunwrap"><div class="sun"></div><div class="photo" style="background-image:url(${it.img})"></div></div>
+ <h2>${it.name}</h2><div class="say">${it.say}</div><div class="price">${it.price}</div>${foot}</div>`));
+S.push(`<div class="slide">${page(total - 1)}<div class="series">${SERIES}</div><h2 style="margin-top:120px">${TIP.title}</h2>
+ <div class="tipbox">${TIP.lines.join('<br>')}</div>${foot}</div>`);
+S.push(`<div class="slide">${page(total)}<div class="series">${SERIES}</div><h2 style="margin-top:60px">想訂購、問價格</h2>
+ <div class="say">掃 QR 加入「${GROUP}」</div><img class="qr" src="${QR}" alt="">
+ <div class="info">${ADDRESS}<br>${HOURS}・中午 12:00 前下單當天送</div>${foot}</div>`);
+if (S.length < 5) throw new Error('輪播至少 5 張');
 document.body.insertAdjacentHTML('beforeend', S.join(''));
 </script></body></html>

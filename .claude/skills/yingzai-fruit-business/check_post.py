@@ -64,6 +64,12 @@ def main(path):
     badc = [c for c, s in sizes if s != (1080, 1350)]
     add("圖卡存在且為 1080×1350", "FAIL" if badc or not sizes else "PASS", f"不符：{badc}" if badc else f"{len(sizes)} 張")
 
+    ig = d.get("ig_carousel")
+    if ig is not None:
+        add("IG 輪播 ≥ 5 張", "PASS" if len(ig) >= 5 else "FAIL", f"{len(ig)} 張")
+    else:
+        add("IG 輪播 ≥ 5 張", "UNVERIFIED", "delivery.json 沒有列出 ig_carousel")
+
     for item, ok, why in rows:
         print(f"| {item} | {ok} | {why} |")
     return 1 if any(r[1] == "FAIL" for r in rows) else 0
