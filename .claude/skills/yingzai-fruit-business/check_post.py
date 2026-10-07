@@ -50,7 +50,8 @@ def main(path):
 
     hits = [w for w in BANNED if w in allt]
     add("無禁用詞", "FAIL" if hits else "PASS", f"命中：{hits}" if hits else "0 個")
-    wn = [w for w in WRONG_NAMES if w in allt]
+    allowed = allt.replace("英仔水果小教室", "")  # 系列名稱是沿用的正式名稱，不算停用名稱
+    wn = [w for w in WRONG_NAMES if w in allowed]
     add("名稱統一", "FAIL" if wn else "PASS", f"出現停用名稱：{wn}" if wn else f"只用「{BRAND}」")
     ty = [f"{k}→{v}" for k, v in TYPOS.items() if k in allt]
     ph = PLACEHOLDER.findall(allt)
