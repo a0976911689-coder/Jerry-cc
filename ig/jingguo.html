@@ -18,16 +18,16 @@ h2 em{font-style:normal;color:var(--gold)}
 </style></head><body>
 <script>
 // ===== 改這裡（價格請換成當天實際價格） =====
-const LINE_ID = '@你的LINE ID';
-const CUTOFF = '10/9（五）中午 12:00 前';
+const GROUP = '阿英的聊天群';
+const CUTOFF = '10/9（五）12:00 前下單';
 const ITEMS = ['紐西蘭蘋果　3 顆 100 元','次郎甜柿　1 顆 50 元','東山椪柑　80 元／斤','火龍果　60 元／斤','美國蜜世界　1 顆 400 元'];
 // ==========================================
 const OV='linear-gradient(rgba(28,8,12,.76),rgba(28,8,12,.82))';
 const bg=u=>`background-image:${OV},url(${u})`;
-const foot=`<div class="foot"><span>英仔水果 ・ 北高雄</span><span>@小英水果小教室</span></div>`;
+const foot=`<div class="foot"><span>英仔果子行 ・ 梓官</span><span>@a_yin_fruit</span></div>`;
 document.body.insertAdjacentHTML('beforeend', [
 `<div class="slide" style="${bg('photos/persimmon.jpg')}"><div class="label">10/10（六）九月初一</div><div class="bar"></div>
- <h2>初一拜拜的水果<br><em>你備好了嗎？</em></h2><div class="sub">提前預訂，北高雄送到家</div><div class="swipe">往右滑看清單 →</div>${foot}</div>`,
+ <h2>初一拜拜的水果<br><em>你備好了嗎？</em></h2><div class="sub">中午前預訂，當天送或來店自取</div><div class="swipe">往右滑看清單 →</div>${foot}</div>`,
 `<div class="slide" style="${bg('photos/apple-new.jpg')}"><div class="label">日期幫你記好</div><div class="bar"></div>
  <h2>這三天<br><em>記得備水果</em></h2>
  <div class="box"><b>10/9（五）</b>　農曆八月廿九<br><b>10/10（六）</b>　九月初一<br><b>10/11（日）</b>　九月初二</div>${foot}</div>`,
@@ -38,7 +38,7 @@ document.body.insertAdjacentHTML('beforeend', [
  <h2>拜拜水果<br><em>一次備齊</em></h2>
  <div class="box">${ITEMS.join('<br>')}</div>${foot}</div>`,
 `<div class="slide" style="${bg('photos/ponkan-new.jpg')}"><div class="label">怎麼預訂</div><div class="bar"></div>
- <h2>傳「品名＋數量」<br><em>我們幫你留</em></h2>
- <div class="box">LINE：${LINE_ID}<br>${CUTOFF}<br>下單當天送 ・ 可自取 ・ 現金付款</div>${foot}</div>`
+ <h2>傳「品名＋數量」<br><em>我們幫你留</em></h2><div class="sub">梓官區通安路215號 ・ 06:00–12:00</div>
+ <div class="box" style="display:flex;gap:36px;align-items:center;font-size:40px;line-height:1.8;padding:40px 44px"><div>${CUTOFF}<br>當天送或來店自取<br>現金付款<br><b>掃 QR 加入聊天群</b></div><img src="assets/line-openchat-qr.jpg" style="width:230px;height:230px;border:6px solid #fff;border-radius:10px;flex:none"></div>${foot}</div>`
 ].join(''));
 </script></body></html>

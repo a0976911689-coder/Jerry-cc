@@ -14,17 +14,17 @@ h2 em{font-style:normal;color:var(--gold)}
 .row{display:flex;gap:28px;align-items:flex-start;font-size:46px;line-height:1.5;margin-bottom:30px}
 .n{flex:none;width:64px;height:64px;border:3px solid var(--gold);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px}
 .bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end}
-.qr{width:250px;height:250px;border:3px dashed var(--gold);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:30px;text-align:center}
+.qr{width:270px;height:270px;border:8px solid #fff;border-radius:12px}
 .small{font-size:32px;color:rgba(250,245,236,.75);line-height:1.7}
 </style></head><body>
 <script>
 // ===== 改這裡 =====
-const LINE_ID = '@你的LINE ID';
+const GROUP = '阿英的聊天群';
 // ==================
 document.body.insertAdjacentHTML('beforeend', `<div class="slide"><div class="frame"></div>
- <div class="k">小英水果小教室 ・ 英仔水果</div>
+ <div class="k">英仔果子行 ・ 梓官</div>
  <h2>喜歡這篇？<br><em>別錯過明天的新品</em></h2><div class="bar"></div>
  <div class="row"><span class="n">1</span><span>按讚追蹤，每天新品和價格第一手</span></div>
- <div class="row"><span class="n">2</span><span>想訂購，加 LINE：${LINE_ID}<br>直接回覆「品名＋數量」</span></div>
- <div class="bottom"><div class="small">中午 12:00 前下單當天送<br>北高雄配送 ・ 可自取 ・ 現金付款</div><div class="qr">放 LINE<br>QR Code</div></div></div>`);
+ <div class="row"><span class="n">2</span><span>想訂購、問價格<br>掃 QR 加入 LINE「${GROUP}」</span></div>
+ <div class="bottom"><div class="small">中午 12:00 前下單當天送<br>梓官區通安路215號 ・ 06:00–12:00</div><img class="qr" src="assets/line-openchat-qr.jpg" alt=""></div></div>`);
 </script></body></html>

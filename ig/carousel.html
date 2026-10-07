@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
-<title>小英水果小教室 輪播範本</title>
+<title>英仔果子行 輪播範本</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{--wine:#6B1F2A;--cream:#FAF5EC;--gold:#C9A96E;--ink:#2B2B2B}
@@ -26,9 +26,9 @@ em{font-style:normal;color:var(--gold)}
 </style></head><body>
 <script>
 // ===== 每週只需改這裡 =====
-const HANDLE = '@小英水果小教室';
+const HANDLE = '@a_yin_fruit';
 const CFG = {
-  cover: {label:'小英水果小教室', title:['同樣是水果','為什麼有的','<em>超甜</em>有的<em>很酸</em>？'], sub:'答案＋這週 3 種必買，往右滑看', swipe:'滑動看答案', bg:'photos/grape.jpg'},
+  cover: {label:'英仔果子行', title:['同樣是水果','為什麼有的','<em>超甜</em>有的<em>很酸</em>？'], sub:'答案＋這週 3 種必買，往右滑看', swipe:'滑動看答案', bg:'photos/grape.jpg'},
   fruits: [
     {label:'No.1 韓國', name:['粒粒飽滿','韓國麝香葡萄'], sub:'一顆一顆都飽滿', bg:'photos/grape.jpg',
      points:['果粒圓潤飽滿','一口一顆很過癮','適合送禮、全家分食'], price:''},
@@ -49,7 +49,7 @@ const S = [];
 const c=CFG.cover;
 S.push(`<div class="slide" style="${bg(c.bg)}"><div class="label serif">${c.label}</div><div class="bar"></div>
  <h2 class="serif big">${c.title.join('<br>')}</h2><div class="sub">${c.sub}</div>
- <div class="swipe">${c.swipe} <span>→</span></div>${foot('英仔水果 ・ 北高雄')}</div>`);
+ <div class="swipe">${c.swipe} <span>→</span></div>${foot('英仔果子行 ・ 梓官')}</div>`);
 CFG.fruits.forEach(f=>S.push(`<div class="slide" style="${bg(f.bg)}"><div class="label serif">${f.label}</div><div class="bar"></div>
  <h2 class="serif">${f.name[0]}<br>${f.name[1]}</h2><div class="sub">${f.sub}</div>
  <div class="box">${f.points.join('<br>')}</div>${f.price?`<div class="price">${f.price}</div>`:''}${foot('')}</div>`));

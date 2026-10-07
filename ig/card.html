@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
-<title>英仔水果 單品卡片</title>
+<title>英仔果子行 單品卡片</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{--wine:#6B1F2A;--cream:#FAF5EC;--gold:#C9A96E}
@@ -33,5 +33,5 @@ const ITEMS = [
 document.body.insertAdjacentHTML('beforeend', ITEMS.map(i=>`<div class="card" data-file="${i.file}"><div class="frame"></div>
  <div class="photo" style="background-image:url(${i.img})"><div class="stamp">${DATE} 今日推薦</div></div>
  <div class="body"><span class="tag">${i.origin}</span><h2 style="${i.name.length>7?"font-size:88px":""}">${i.name}</h2><p>${i.desc}</p>${i.price?`<div class="price">${i.price}</div>`:''}
- <div class="foot"><span>英仔水果・北高雄</span><b>回覆 LINE 訂購</b></div></div></div>`).join(''));
+ <div class="foot"><span>英仔果子行・梓官</span><b>回覆 LINE 訂購</b></div></div></div>`).join(''));
 </script></body></html>

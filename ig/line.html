@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
-<title>英仔水果 LINE 今日推薦</title>
+<title>英仔果子行 LINE 今日推薦</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{--wine:#6B1F2A;--cream:#FAF5EC;--gold:#C9A96E;--ink:#2B2B2B}
@@ -50,13 +50,13 @@ const ITEMS = [
 ];
 // ==========================
 const cover = `<div id="cover"><div class="frame"></div>
- <div class="kicker serif">英仔水果 ・ 小英水果小教室</div>
+ <div class="kicker serif">英仔果子行 ・ 梓官</div>
  <h1 class="serif">今日<br><em>水果推薦</em></h1>
  <div class="date">${DATE}　新鮮到貨 ${ITEMS.length} 款</div>
  <div class="strip">${ITEMS.map(i=>`<div><i style="background-image:url(${i.img})"></i>${i.name.replace('美國','').replace('San Clemente ','')}</div>`).join('')}</div>
- <div class="brand serif">北高雄配送 ・ 歡迎自取</div></div>`;
-const list = `<div id="list"><div class="head"><div class="kicker serif">英仔水果</div>
- <h2 class="serif">${DATE} <em>今日推薦</em></h2><p>小英親自挑 ・ 北高雄在地配送</p><div class="bar"></div></div>
+ <div class="brand serif">梓官區通安路215號 ・ 06:00–12:00</div></div>`;
+const list = `<div id="list"><div class="head"><div class="kicker serif">英仔果子行</div>
+ <h2 class="serif">${DATE} <em>今日推薦</em></h2><p>每天親自挑 ・ 梓官在地</p><div class="bar"></div></div>
  ${ITEMS.map(i=>`<div class="card"><div class="ph" style="background-image:url(${i.img})"></div>
   <div class="tx"><span class="tag">${i.origin}</span><h3 class="serif">${i.name}</h3><p>${i.desc}</p>${i.price?`<div class="price">${i.price}</div>`:''}</div></div>`).join('')}
  <div class="cta"><h4 class="serif">想訂購？<br>直接回覆品名與數量</h4>
