@@ -255,3 +255,4 @@ description: 英仔果子行生意專案 Playbook。Use for ANY work on 英仔�
 - 圖卡範本：`ig/`（`node export-any.mjs <範本.html> <前綴>`）。範本尚未全部改成 Canva 風格；新風格樣張：`ig/style-sample.html`。
 - LINE 訂單機器人：`line-order/`（需接在 LINE 官方帳號，OpenChat 不支援）。
 - 通用工具：`toolbox/`。
+- 行銷推廣策略（每週發文表、檔期節奏、找回老客人、每週指標）：`.claude/skills/yingzai-marketing-strategy/SKILL.md`。兩份衝突時以本檔為準。
