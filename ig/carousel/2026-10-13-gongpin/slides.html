@@ -1,0 +1,123 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&display=block">
+<style>
+:root{--paper:#1b1814;--paper-deep:#25211b;--ink:#f4ecdc;--ink-soft:#cfc4af;--gold:#b98a3e;--line:#3d362c;--alert:#e3907a}
+*{box-sizing:border-box;margin:0}
+body{background:#000;font-family:"Noto Serif TC",serif;color:var(--ink)}
+.s{width:1080px;height:1350px;position:relative;overflow:hidden;background:var(--paper);display:flex;flex-direction:column}
+.pad{padding:96px 88px}
+.brand{position:absolute;left:88px;bottom:64px;font-size:30px;letter-spacing:.2em;color:var(--ink-soft);display:flex;align-items:center;gap:20px}
+.brand::before{content:"";width:56px;height:2px;background:var(--gold)}
+.no{position:absolute;right:88px;bottom:64px;font-size:28px;color:var(--ink-soft);letter-spacing:.1em}
+.kicker{font-size:34px;letter-spacing:.3em;color:var(--ink-soft);display:flex;align-items:center;gap:22px}
+.kicker::before{content:"";width:70px;height:3px;background:var(--gold)}
+h1{font-size:118px;font-weight:900;line-height:1.22;letter-spacing:.04em}
+h2{font-size:84px;font-weight:900;line-height:1.25;letter-spacing:.04em}
+h3{font-size:52px;font-weight:600}
+p{font-size:40px;line-height:1.7;color:var(--ink-soft)}
+.seal{display:inline-block;border:4px solid var(--ink);padding:0 .25em;font-size:.5em;vertical-align:.5em;margin-left:.15em;letter-spacing:.1em}
+.photo{position:relative}
+.photo img{display:block;width:100%;object-fit:cover}
+.photo::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(transparent,var(--paper))}
+.frame{position:absolute;width:300px;height:300px;border-left:5px solid var(--gold);border-bottom:5px solid var(--gold)}
+.list{display:grid;gap:44px;margin-top:64px}
+.list div{border-top:3px solid var(--ink);padding-top:26px;display:grid;gap:10px}
+.list p{font-size:36px}
+.date{border:4px solid var(--ink);padding:40px 64px;text-align:center;display:inline-block}
+.date .m{font-size:44px;letter-spacing:.3em}
+.date .d{font-size:170px;font-weight:900;line-height:1.1}
+.date .w{font-size:40px;color:var(--ink-soft)}
+.steps{display:grid;gap:54px;margin-top:70px;counter-reset:n}
+.steps div{display:grid;grid-template-columns:96px 1fr;gap:6px 36px;counter-increment:n}
+.steps div::before{content:counter(n);grid-row:span 2;width:96px;height:96px;border:4px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-size:50px;font-weight:900}
+.steps p{font-size:36px}
+.tag{display:inline-block;margin-top:14px;font-size:34px;font-weight:600;color:var(--alert);border:3px solid var(--alert);padding:2px 18px;width:max-content}
+.qr{width:430px;height:430px;background:#fff;padding:22px;border:3px solid var(--gold)}
+.info{display:grid;grid-template-columns:auto 1fr;gap:20px 40px;font-size:38px;margin-top:56px}
+.info dt{color:var(--ink-soft);letter-spacing:.15em}
+.info dd{margin:0;font-weight:600}
+.more{position:absolute;right:88px;top:96px;font-size:30px;color:var(--ink-soft);letter-spacing:.1em}
+</style></head><body>
+
+<!-- 1 封面 -->
+<section class="s">
+  <div class="photo" style="height:720px"><img src="{{market}}" style="height:720px;object-position:50% 45%" alt=""></div>
+  <div class="pad" style="padding-top:20px">
+    <p class="kicker">凌晨四點・批發市場</p>
+    <h1 style="margin-top:36px;font-size:100px">敬神的水果，<br>一顆一顆挑過<span class="seal">英仔</span></h1>
+  </div>
+  <div class="brand">英仔果子行</div><div class="no">往下滑 →</div>
+</section>
+
+<!-- 2 凌晨 -->
+<section class="s pad">
+  <p class="kicker">早上六點・通安路</p>
+  <h2 style="margin-top:44px">挑過的，<br>才擺上攤子</h2>
+  <p style="margin-top:44px;max-width:860px">在批發市場一箱一箱看，外觀端正、熟度剛好的，才帶回來。</p>
+  <div class="photo" style="margin-top:60px;height:520px"><img src="{{stall}}" style="height:520px;object-position:50% 60%" alt=""></div>
+  <div class="brand">英仔果子行</div><div class="no">2 / 7</div>
+</section>
+
+<!-- 3 再挑一次 -->
+<section class="s">
+  <div style="position:relative;margin:96px 88px 0;height:700px">
+    <img src="{{hero}}" style="width:100%;height:700px;object-fit:cover;object-position:50% 40%;display:block;filter:saturate(.85) contrast(1.05)" alt="">
+    <div class="frame" style="left:-26px;bottom:-26px"></div>
+  </div>
+  <div class="pad" style="padding-top:80px">
+    <h2>回到攤子，<br>再挑一次</h2>
+    <p style="margin-top:30px">要拜的，一顆一顆看過，配成一份。</p>
+  </div>
+  <div class="brand">英仔果子行</div><div class="no">3 / 7</div>
+</section>
+
+<!-- 4 服務 -->
+<section class="s pad">
+  <p class="kicker">我們幫你做的事</p>
+  <h2 style="margin-top:32px;font-size:76px">敬神的事，<br>交給阿英</h2>
+  <div class="list" style="gap:30px;margin-top:44px">
+    <div><h3>宮廟供品</h3><p>供桌與水果籃，可以長期配合，每週準時送到。</p></div>
+    <div><h3>神明生日・大日子</h3><p>早幾天說好要幾份，照日子備貨，不怕當天缺。</p></div>
+    <div><h3>家裡敬果</h3><p>初一、十五和敬果日，說要拜幾樣，幫你配好。</p></div>
+    <div><h3>送到家・送到廟</h3><p>梓官、岡山、彌陀、永安，12:00 前下單當天送。</p></div>
+  </div>
+  <div class="brand">英仔果子行</div><div class="no">4 / 7</div>
+</section>
+
+<!-- 5 拜拜日 -->
+<section class="s pad" style="justify-content:center;align-items:flex-start">
+  <p class="kicker">下一個拜拜日</p>
+  <div class="date" style="margin-top:56px"><div class="m">農曆九月</div><div class="d">十五</div><div class="w">國曆 10/24（六）</div></div>
+  <h2 style="margin-top:70px">前一天說好，<br>隔天一早備好</h2>
+  <p style="margin-top:30px">來攤子拿，或是送到家、送到廟都可以。</p>
+  <div class="brand">英仔果子行</div><div class="no">5 / 7</div>
+</section>
+
+<!-- 6 怎麼訂 -->
+<section class="s pad">
+  <p class="kicker">怎麼訂</p>
+  <h2 style="margin-top:40px">三個步驟，<br>像傳訊息給熟人</h2>
+  <div class="steps">
+    <div><h3>加入聊天群</h3><p>掃最後一張的 QR 碼，加入「阿英的聊天群」。</p></div>
+    <div><h3>說要幾份、哪天</h3><p>例如「十五要拜，五樣一份」。<br>宮廟可以私訊談。</p></div>
+    <div><h3>來拿或送到</h3><p>早上來攤子拿，或送到家、送到廟。<br><span class="tag">12:00 截單</span></p></div>
+  </div>
+  <div class="brand">英仔果子行</div><div class="no">6 / 7</div>
+</section>
+
+<!-- 7 QR -->
+<section class="s pad">
+  <p class="kicker">加入「阿英的聊天群」</p>
+  <div style="display:flex;gap:56px;align-items:center;margin-top:60px">
+    <img class="qr" src="{{qr}}" alt="">
+    <p style="font-size:38px">用 LINE 掃描加入。<br>今天進了什麼、<br>拜拜要怎麼配，<br>都在群裡說。</p>
+  </div>
+  <dl class="info">
+    <dt>地址</dt><dd>高雄市梓官區通安路 215 號</dd>
+    <dt>營業</dt><dd>每天 06:00–12:00</dd>
+    <dt>外送</dt><dd>梓官、岡山、彌陀、永安</dd>
+    <dt>付款</dt><dd>現金</dd>
+  </dl>
+  <div class="brand">英仔果子行</div><div class="no">7 / 7</div>
+</section>
+</body></html>
