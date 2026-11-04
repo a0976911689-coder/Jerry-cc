@@ -3,7 +3,8 @@
 delivery.json 格式見 example_delivery.json。只檢查能用程式判定的項目，其餘需人工對照（會標 UNVERIFIED）。"""
 import json, re, sys, os, struct
 
-LIMIT = 50
+LIMIT = {"Threads": 500, "IG": 2200, "FB": 2200, "LINE": 2200}  # 各平台字數上限；2026/11/4 起改列點文，不再限 50 字
+BULLET = "✅"
 ADDRESS = "梓官區通安路215號"
 HOURS = "06:00–12:00"
 BRAND = "英仔果子行"
@@ -40,8 +41,10 @@ def main(path):
     add("價格與輸入一致", "FAIL" if bad else "PASS", f"價格不符或缺漏：{bad}" if bad else "提到的品項價格都與輸入一致")
 
     for name, body in posts.items():
-        n = len(body)
-        add(f"{name} 內文 ≤ {LIMIT} 字", "PASS" if n <= LIMIT else "FAIL", f"{n} 字")
+        n, lim = len(body), LIMIT.get(name, 2200)
+        add(f"{name} 內文 ≤ {lim} 字", "PASS" if n <= lim else "FAIL", f"{n} 字")
+        nb = sum(1 for ln in body.splitlines() if ln.strip().startswith(BULLET))
+        add(f"{name} 列點文", "PASS" if nb >= 2 else "FAIL", f"{nb} 個 ✅ 列點（至少 2 個）")
         miss_info = [s for s in (ADDRESS, HOURS) if s not in body]
         add(f"{name} 含地址與營業時間", "FAIL" if miss_info else "PASS", f"缺：{miss_info}" if miss_info else "有")
         add(f"{name} 內文無連結", "FAIL" if URL.search(body) else "PASS", "連結需放留言區")
