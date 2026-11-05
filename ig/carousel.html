@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><title>英仔水果小教室 IG 輪播</title>
+<link rel="stylesheet" href="fonts/wenkai/wenkai.css">
+<style>
+/* 配色取自小英仔的 Canva 設計；字體：Canva 外以霞鶩文楷 TC 粗體＋描邊，呈現毛筆粗體風格 */
+:root{--paper:#F3EEE4;--ink:#1E1E1E;--sun:#E9C46A;--slate:#5C6F7E;--accent:#D9673A}
+*{box-sizing:border-box;margin:0}
+body{background:#888;display:flex;flex-wrap:wrap;gap:24px;padding:24px}
+.slide{flex:none;width:1080px;height:1350px;position:relative;overflow:hidden;color:var(--ink);padding:90px 90px 70px;display:flex;flex-direction:column;align-items:center;text-align:center;
+ font-family:'LXGW WenKai TC',serif;font-weight:700;-webkit-text-stroke:.6px currentColor;
+ background:radial-gradient(circle at 18% 12%,rgba(255,255,255,.6),transparent 40%),radial-gradient(circle at 85% 85%,rgba(200,185,160,.28),transparent 45%),var(--paper)}
+.series{font-size:38px;color:var(--slate);letter-spacing:.3em;-webkit-text-stroke:0}
+.page{position:absolute;top:40px;right:52px;font-size:30px;color:var(--slate);-webkit-text-stroke:0}
+.big{font-size:128px;line-height:1.25;margin-top:auto}
+.big em{font-style:normal;color:var(--accent)}
+.sunwrap{position:relative;width:860px;height:640px;margin:34px 0 26px;display:flex;align-items:center;justify-content:center}
+.sun{position:absolute;width:680px;height:680px;border-radius:50%;background:var(--sun);opacity:.55}
+/* 商品照片一律正方形 1:1 */
+.photo{position:relative;width:600px;height:600px;aspect-ratio:1/1;border-radius:24px;background-size:cover;background-position:center;box-shadow:0 18px 40px rgba(60,40,20,.18)}
+h2{font-size:112px;line-height:1.2}
+.say{font-size:50px;color:var(--slate);margin-top:16px}
+.price{font-size:88px;color:var(--accent);margin-top:14px}
+.tipbox{margin-top:50px;font-size:58px;line-height:1.7;text-align:left;border-left:10px solid var(--sun);padding:20px 40px}
+.swipe{margin:50px 0 auto;font-size:44px;color:var(--slate);border:4px solid var(--slate);border-radius:60px;padding:14px 46px;-webkit-text-stroke:0}
+.qr{width:340px;height:340px;border:10px solid #fff;border-radius:16px;margin:40px 0 20px;box-shadow:0 10px 30px rgba(60,40,20,.15)}
+.info{font-size:42px;color:var(--slate);line-height:1.7;-webkit-text-stroke:0}
+.foot{margin-top:auto;width:100%;display:flex;justify-content:space-between;font-size:32px;color:var(--slate);-webkit-text-stroke:0}
+</style></head><body>
+<script>
+// ===== 每次只改這裡（至少 5 張：封面＋品項＋小技巧＋結尾，品項 1～5 樣） =====
+const SERIES = '英仔水果小教室';
+const HANDLE = '@a_yin_fruit';
+const ADDRESS = '梓官區通安路215號';
+const HOURS = '06:00–12:00';
+const GROUP = '阿英的聊天群';
+const QR = 'assets/line-openchat-qr.jpg';
+const COVER = { lines: ['蜜世界買回家', '<em>先別急著切？</em>'], swipe: '往右滑看小英仔的提醒' };
+const ITEMS = [   // say 只能放小英仔親口說過的話
+  { name: '紐西蘭蘋果', say: '很脆又很甜', price: '3 顆 100 元', img: 'photos/apple-new.jpg' },
+  { name: '美國蜜世界', say: '買回家多放幾天再削', price: '1 顆 400 元', img: 'photos/melon-new.jpg' },
+  { name: '藍星百香果', say: '這超香，吃起來超甜', price: '5 粒 100 元', img: 'photos/passion.jpg' },
+];
+const TIP = { title: '小英仔的提醒', lines: ['蜜世界買回家', '多放幾天再削', '會更好吃'] };
+// ==========================================================================
+const total = ITEMS.length + 3;
+const foot = `<div class="foot"><span>英仔果子行・梓官</span><span>${HANDLE}</span></div>`;
+const page = n => `<span class="page">${n}／${total}</span>`;
+const S = [];
+S.push(`<div class="slide">${page(1)}<div class="series">${SERIES}</div><div class="big">${COVER.lines.join('<br>')}</div><div class="swipe">${COVER.swipe} →</div>${foot}</div>`);
+ITEMS.forEach((it, i) => S.push(`<div class="slide">${page(i + 2)}<div class="series">${SERIES}</div>
+ <div class="sunwrap"><div class="sun"></div><div class="photo" style="background-image:url(${it.img})"></div></div>
+ <h2>${it.name}</h2><div class="say">${it.say}</div><div class="price">${it.price}</div>${foot}</div>`));
+S.push(`<div class="slide">${page(total - 1)}<div class="series">${SERIES}</div><h2 style="margin-top:120px">${TIP.title}</h2>
+ <div class="tipbox">${TIP.lines.join('<br>')}</div>${foot}</div>`);
+S.push(`<div class="slide">${page(total)}<div class="series">${SERIES}</div><h2 style="margin-top:60px">想訂購、問價格</h2>
+ <div class="say">掃 QR 加入「${GROUP}」</div><img class="qr" src="${QR}" alt="">
+ <div class="info">${ADDRESS}<br>${HOURS}・中午 12:00 前下單當天送</div>${foot}</div>`);
+if (S.length < 5) throw new Error('輪播至少 5 張');
+document.body.insertAdjacentHTML('beforeend', S.join(''));
+</script></body></html>
